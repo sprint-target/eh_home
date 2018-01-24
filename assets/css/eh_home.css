@@ -1,0 +1,32 @@
+.menu-item-xiala{
+    display: none;
+    width: 90px;
+    /*margin-left: 20px;*/
+    position: absolute;
+    background-color: #fff;
+    border: solid 1px #f2f2f2;
+    border-radius: 4px;
+    z-index: 99999;
+}
+.menu-item-xiala li{
+    list-style: none;
+    color: #333;
+    font-size: 14px;
+    margin-left: -40px;
+    width: 90px;
+    height: 36px;
+    line-height: 36px;
+    text-align: center;
+    border-bottom: 1px solid #F2F2F2;
+}
+.menu-item-xiala li a{
+    color: #333;
+}
+.menu-item-xiala li:hover{
+    background-color: #fafafa;
+
+}
+.menu-item-xiala li a:hover{
+    color: dodgerblue;
+}
+/*导航栏下拉列表css*/
