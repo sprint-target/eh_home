@@ -16,7 +16,7 @@ $(function () {
 
 });
 
-//获取网页头部 Admin登录信息
+//获取网页头部 user登录信息
 function getheaderMessage() {
     $.ajax({
         type: "GET",
@@ -53,6 +53,9 @@ function getheaderMessage() {
 //判断是否登录
 function loginWhere() {
 
+    if (localStorage.getItem("eh_token").length == 0 || localStorage.getItem("eh_token") == null){
+        return false;
+    }
     $.ajax({
         type: "GET",
         url: serverURL+"/user/getLoginMessage",

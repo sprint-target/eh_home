@@ -28,6 +28,38 @@
         <link href="assets/css/colors/flat-blue.css" rel="alternate stylesheet" title="Flat Blue color">
         
         <link rel="shortcut icon" href="assets/images/fav-icon.png">
+		<link rel="stylesheet" href="assets/css/jquery.slider.css">
+		<style>
+
+			form{
+				-webkit-user-select: none;
+				-moz-user-select: none;
+				-ms-user-select: none;
+				-o-user-select: none;
+				user-select: none;
+			}
+
+			.slider{
+
+				position: relative;
+				float: left;
+				margin-bottom: 25px;
+
+			}
+			.form-title{
+				width: 370px;
+				font-weight: normal;
+				color: orange;
+				text-align: right;
+				display: block;
+				float: right;
+			}
+
+			.form-title-width{
+				width: 330px;
+			}
+
+		</style>
     </head>
 
     <body class="page home page-template-default">
@@ -36,7 +68,7 @@
                 <div class="container">
                     <nav>
                         <ul id="menu-top-bar-left" class="nav nav-inline pull-left animate-dropdown flip">
-                            <li class="menu-item animate-dropdown"><a title="Welcome to Worldwide Electronics Store" href="index.html">欢迎来到二货校园商城</a></li>
+                            <li class="menu-item animate-dropdown"><a title="欢迎来到二货校园商城" href="index.html">欢迎来到二货校园商城</a></li>
                         </ul>
                     </nav>
 
@@ -75,16 +107,15 @@
 
 											<p class="form-row form-row-wide">
 												<label for="username">用户名
-												<span class="required">*</span></label>
+												<span class="required">*</span><span class="form-title"></span></label>
 												<input type="text" class="input-text" name="userName" id="username" required/>
 											</p>
 
-											<p class="form-row form-row-wide">
+											<p class="form-row form-row-wide" id="slider-box">
 												<label for="password">密码
-												<span class="required">*</span></label>
-												<input class="input-text" type="password" name="userPassword" id="password"required />
+												<span class="required">*</span><span class="form-title"></span></label>
+												<input class="input-text" type="password" name="userPassword" id="password" required />
 											</p>
-
 
 											<p class="form-row">
 												<input class="button" type="submit" value="登录" id="loginBtn">
@@ -93,7 +124,7 @@
 												</label>
 											</p>
 
-											<p class="lost_password">
+											<p class="lost_password form-row">
 												<a href="login-and-register.html" target="_blank">忘记密码?</a>
 												<a href="register.html" style="float: right">没有账户？立即注册</a>
 											</p>
@@ -233,49 +264,17 @@
 
         <script type="text/javascript" src="assets/js/jquery.min.js"></script>
 		<script src="assets/js/layer/2.4/layer.js"></script>
-		<script src="assets/js/eh_home.js"></script>
+		<script src="assets/js/eh_login.js"></script>
+		<script src="assets/js/jquery.slider.min.js"></script>
 
-	<script>
-
-$(function () {
-
-    //是否登录判断，用户进入该页面，如以及存在登录信息，则直接挑转到index.html
-		loginWhere();
-
-            $('#loginBtn').click(function(){
-                $.ajax({
-                    type: "POST",
-                    url: serverURL+"/user/login",
-                    data:$('#myform').serialize(),
-                    dataType:"json",
-                    success: function(data){
-                        if(data.errorCode=="500") {
-                            layer.msg(data.message);
-                        }
-                        if(data.errorCode=="200") {
-                            localStorage.setItem("eh_token",data.item.token);
-                            window.location.href="index.html";
-                        }
-                    },
-                    error:function(data) {
-                        layer.msg("服务器繁忙,请稍后再试");
-                        return false;
-                    },
-                });
-                return false;
-            });
+<script>
 
 
-
-
-
-
-
-
-
- });
-
-	</script>
-
+</script>
+		<!--<script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>-->
+		<!--<script type="text/javascript">-->
+			<!--alert(returnCitySN["cip"]+','+returnCitySN["cname"]);-->
+            <!--// document.write(returnCitySN["cip"]+','+returnCitySN["cname"])-->
+		<!--</script>-->
     </body>
 </html>
