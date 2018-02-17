@@ -1,12 +1,12 @@
 $(function () {
     //是否登录判断，用户进入登录页面，如已存在登录信息(token存在并解析正确)，则直接挑转到index.html
     loginWhere();
-    var localIp=""; //存储IP
+    var localIp="116.9.184.156"; //存储IP
     var sliderStatus=false;//是否完成滑块验证
     var sliderObj=false;
 
        //使用API获取IP
-     $.ajax({
+    /* $.ajax({
                 'url':'http://api.ip138.com/query/',//API
                 'data':{            //默认自动添加callback参数
                     'ip':'', //为空即为当前iP地址
@@ -21,7 +21,7 @@ $(function () {
                         // getIPStatus(localIp);
                     }
                 }
-     });
+     });*/
 
      // 页面加载完毕并且成功获取ip后与服务器交互，判断是否需要滑块验证（此操作会耗费服务器资源）
      function getIPStatus(ipxx) {

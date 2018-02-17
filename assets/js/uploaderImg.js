@@ -1,7 +1,8 @@
 //图片上传插件，上传服务器地址为 server 属性，修改即可使用
-
     // 当domReady的时候开始初始化
+    var imgUrlList=new Array();
     $(function () {
+
         var $wrap = $('.uploader-list-container'),
 
             // 图片容器
@@ -549,8 +550,11 @@
         uploader.on( 'uploadSuccess', function( file, response ) {
             var imgurl = response._raw; //上传图片的路径
             imgurl=JSON.parse(imgurl);//转欢Json对象
-            console.log(imgurl.message);
+            // console.log(imgurl.message);
+
             $('#' + file.id).addClass('upload-state-success').find(".state").text("已上传");
+            imgUrlList.push(imgurl.message);
+
         });
 
 
