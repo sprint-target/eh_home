@@ -119,20 +119,20 @@
                                                 </p>
 
                                                   <p class="form-row form-row-wide">
-                                                    <label for="username">宝贝名称
+                                                    <label for="productName">宝贝名称
                                                         <span class="required">*</span><span class="form-title"></span></label>
-                                                    <input type="text" class="input-text" name="productName" id="username" value="" placeholder="带上品类、品牌型号更容易让买家看到您的宝贝的哦"   />
+                                                    <input type="text" class="input-text" name="productName" id="productName" value="" placeholder="带上品类、品牌型号更容易让买家看到您的宝贝的哦"   />
                                                 </p>
 
                                                 <p class="form-row form-row-wide"  style="width: 100px;">
-                                                        <label for="username">宝贝数量
+                                                        <label for="productNumber">宝贝数量
                                                             <span class="required">*</span><span class="form-title"></span></label>
-                                                        <input type="number" class="input-text" name="productNumber" id="productNumber" value="1" placeholder="宝贝数量"   style="text-align: center;width: 100px;" />
+                                                        <input type="number" class="input-text" name="productNumber" id="productNumber" value="1" placeholder="宝贝数量"  onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"  style="text-align: center;width: 100px;" />
                                                 </p>
 
                                                 <p>
                                                     <div class="layui-form-item">
-                                                        <label for="username">宝贝类别
+                                                        <label for="rank-1">宝贝类别
                                                             <span class="required">*</span><span class="form-title"></span></label>
 
                                                 <div class="layui-inline" >
@@ -163,7 +163,7 @@
                                                 </p>
                                                 <p>
                                                     <div class="layui-form-item">
-                                                    <label for="username">宝贝区域
+                                                    <label for="schoolCode">宝贝区域
                                                         <span class="required">*</span><span class="form-title"></span></label>
                                                         <div class="layui-inline" >
                                                             <div class="layui-input-inline layui-form" style="width: 426px;" >
@@ -178,10 +178,10 @@
                                                 </p>
                                                 <p>
                                                 <div class="layui-form-item">
-                                                    <label for="username">宝贝新旧程度
+                                                    <label for="degree">宝贝新旧程度
                                                         <span class="required">*</span><span class="form-title"></span></label>
                                                     <div class="layui-input-block" style="margin-left:0px;">
-                                                        <select name="degree" lay-filter="degree">
+                                                        <select name="degree" lay-filter="degree" id="degree">
                                                             <option value="99">99新</option>
                                                             <option value="95">95新</option>
                                                             <option value="9">9成新</option>
@@ -191,14 +191,14 @@
                                                 </p>
                                                 <p>
                                                     <div class="layui-inline" style="width: 160px;">
-                                                    <label for="username">宝贝入手时间
+                                                    <label for="date">宝贝入手时间
                                                         <span class="required">*</span><span class="form-title"></span></label>
                                                         <div class="layui-input-inline">
                                                             <input type="text"  id="date" lay-verify="date" placeholder="年 / 月 / 日" autocomplete="off" class="layui-input"  />
                                                         </div>
                                                     </div>
                                                     <div class="layui-inline" style="width: 160px;float: right">
-                                                        <label for="username">宝贝保修到期时间
+                                                        <label for="dateExpires">宝贝保修到期时间
                                                             <span class="required">*</span><span class="form-title"></span></label>
                                                         <div class="layui-input-inline">
                                                             <input type="text" id="dateExpires" lay-verify="date" placeholder="年 / 月 / 日" autocomplete="off" class="layui-input"  />
@@ -207,13 +207,11 @@
                                                 </p>
 
                                                 <p class="form-row form-row-wide">
-                                                    <label for="username">宝贝价格
+                                                    <label for="productPrice">宝贝价格
                                                         <span class="required">*</span><span class="form-title"></span></label>
-                                                    <input type="number" class="input-text" name="productPrice" value="" placeholder="￥"   onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"   />
+                                                    <input type="number" class="input-text" name="productPrice" value="" style="color: red;font-weight: bold;" placeholder="￥" id="productPrice"  onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"   />
                                                 </p>
-
-
-                                                    <div class="formControls col-xs-8 col-sm-9" style="width: 800px;">
+                                                    <div class="formControls col-xs-8 col-sm-9" style="width: 670px;">
                                                         <div class="uploader-list-container" >
                                                             <div class="queueList">
                                                                 <div id="dndArea" class="placeholder">
@@ -235,9 +233,9 @@
 
 
                                             <p class="form-row form-row-wide">
-                                                <label for="username">宝贝介绍
+                                                <label for="productIntroduce">宝贝介绍
                                                     <span class="required">*</span><span class="form-title"></span></label>
-                                                <textarea name="productIntroduce" style="height: 180px;width:500px; padding: 15px;line-height:1.5;text-indent:2em;"></textarea>
+                                                <textarea name="productIntroduce" id="productIntroduce" style="height: 180px;width:500px; padding: 15px;line-height:1.5;text-indent:2em;"></textarea>
                                             </p>
                                                 <p class="form-row">
                                                     <input class="button" type="submit" value="我要发布" id="issue">
@@ -394,19 +392,77 @@
 
         $("#issue").click(function () {
             var productType;
+
+            if ($("#productName").val() == null || $("#productName").val().trim().length == 0){
+                layer.msg("还没有输入宝贝名称哦");
+                return false;
+            }else {
+                if ($("#productName").val().length < 2){
+                    layer.msg("宝贝名称过短啦,最少需要2个字符哦");
+                    return false;
+                }
+                if ( $("#productName").val().length > 30){
+
+                    layer.msg("宝贝名称过长啦,最多可以输入30个字符哦");
+                    return false;
+                }
+            }
+
+            if ($("#productNumber").val() == null || $("#productNumber").val() <= 0){
+                layer.msg("还没有输入宝贝数量哦");
+                return false;
+            }
+
             if ($("#rank-3").val() != null && $("#rank-3").val() != ""){
                 productType=$("#rank-3").val();
             }else {
                 if ($("#rank-2").val() != null && $("#rank-2").val() != ""){
+                    if ($("#rank-3 option").length > 0){
+                        layer.msg("请选择三级分类哦");
+                        return false;
+                    }
                     productType=$("#rank-2").val();
                 }else {
                     if ($("#rank-1").val() != null && $("#rank-1").val() != ""){
+                       if ($("#rank-2 option").length > 0){
+                           layer.msg("请选择二级分类哦");
+                           return false;
+                       }
                         productType=$("#rank-1").val();
                     }else {
-                        layer.msg("还没有选择宝贝分类哦");
+                        layer.msg("请选择一级分类哦");
                         return false;
                     }
                 }
+            }
+            if($("#schoolCode").val() == null || $("#schoolCode").val() == ""){
+                layer.msg("还没有选择宝贝区域哦");
+                return false;
+            }
+
+            if ($("#date").val() == null || $("#date").val() == ""){
+                layer.msg("还没有选择宝贝入手时间哦");
+                return false;
+            }
+            if ($("#dateExpires").val() == null || $("#dateExpires").val() == ""){
+                layer.msg("还没有选择宝贝宝贝保修到期时间哦");
+                return false;
+            }
+            if($("#date").val() > $("#dateExpires").val()){
+                layer.msg("入手时间不能大于保修到期时间哦");
+                return false;
+            }
+            if($("#productPrice").val() == null || $("#productPrice").val() == ""){
+                layer.msg("亲,您忘了写宝贝价格啦！！");
+                return false;
+            }
+            if (imgUrlList.length == 0){
+                layer.msg("为了买家更直观的看到您的宝贝，请至少选择上传一张图片");
+                return false;
+            }
+            if($("#productIntroduce").val() == null || $("#productIntroduce").val().trim().length == 0 ){
+                layer.msg("为了买家能详细了解您的宝贝，请填写宝贝介绍");
+                return false;
             }
             //+'&imgUrlList='+imgUrlList+'&token='+localStorage.getItem("eh_token")+'&productType='+productType
             $.ajax({
@@ -422,32 +478,12 @@
                 dataType:"json",
                 traditional: true,//传统的方式来序列化数据 (不对数据进行任何修改)
                 success: function(data){
-                    if(data.errorCode=="500") {
+                    if(data.errorCode=="501" ) {
                         layer.msg(data.message);
                         localStorage.removeItem("eh_token");
                         window.location.href='login.html';
                     }
-                    if(data.errorCode=="200") {
-                        layer.msg(data.message);
-                    }
-                },
-                error:function(data) {
-                    layer.msg("服务器繁忙,请稍后再试");
-                    return null;
-                },
-            });
-            return false;
-        });
-
-        $("#issue-1").click(function () {
-            $.ajax({
-                type: "post",
-                url: serverURL+"/eh/producImagePush",
-                data:{'imgUrlList':imgUrlList},
-                dataType:"json",
-                traditional: true,//传统的方式来序列化数据 (不对数据进行任何修改)
-                success: function(data){
-                    if(data.errorCode=="500") {
+                    if(data.errorCode != "200" || data.errorCode == "500"){
                         layer.msg(data.message);
                     }
                     if(data.errorCode=="200") {
@@ -461,6 +497,29 @@
             });
             return false;
         });
+        //
+        // $("#issue-1").click(function () {
+        //     $.ajax({
+        //         type: "post",
+        //         url: serverURL+"/eh/producImagePush",
+        //         data:{'imgUrlList':imgUrlList},
+        //         dataType:"json",
+        //         traditional: true,//传统的方式来序列化数据 (不对数据进行任何修改)
+        //         success: function(data){
+        //             if(data.errorCode=="500") {
+        //                 layer.msg(data.message);
+        //             }
+        //             if(data.errorCode=="200") {
+        //                 layer.msg(data.message);
+        //             }
+        //         },
+        //         error:function(data) {
+        //             layer.msg("服务器繁忙,请稍后再试");
+        //             return null;
+        //         },
+        //     });
+        //     return false;
+        // });
 
     });
 
@@ -511,6 +570,8 @@
                 if(data.errorCode=="200") {
                     if (data.list.length == 0){
                         $("#rank-2").parent().css("display","none");
+                        $("#rank-2").html("");
+                        renderForm('rank-2-box');
                        return false;
                     }
                     $("#rank-2").html("");
@@ -546,6 +607,8 @@
                 if(data.errorCode=="200") {
                     if (data.list.length == 0){
                         $("#rank-3").parent().css("display","none");
+                        $("#rank-3").html("");
+                        renderForm('rank-3-box');
                         return false;
                     }
                     $("#rank-3").html("");
