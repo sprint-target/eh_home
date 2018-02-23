@@ -199,13 +199,17 @@
                                                     </div>
                                                     <div class="layui-inline" style="width: 160px;float: right">
                                                         <label for="dateExpires">宝贝保修到期时间
-                                                            <span class="required">*</span><span class="form-title"></span></label>
+                                                            <span class="required">*</span><span class="form-title"></span>
+                                                        </label>
                                                         <div class="layui-input-inline">
-                                                            <input type="text" id="dateExpires" lay-verify="date" placeholder="年 / 月 / 日" autocomplete="off" class="layui-input"  />
+                                                            <input type="text" id="dateExpires"  lay-verify="date" placeholder="年 / 月 / 日" autocomplete="off" class="layui-input"  />
                                                         </div>
+
                                                     </div>
                                                 </p>
-
+                                                <p class="form-row form-row-wide" style="margin-top: 15px;margin-bottom: 15px;!important;">
+                                                    <label for="notQuite" style="margin-right: 15px;">宝贝保修到期时间不详:</label><input type="checkbox"  id="notQuite"  value="yes"  lay-filter="notQuite" >
+                                                </p>
                                                 <p class="form-row form-row-wide">
                                                     <label for="productPrice">宝贝价格
                                                         <span class="required">*</span><span class="form-title"></span></label>
@@ -390,8 +394,9 @@
         load_1_Rank();
         loginWhere();
 
-        $("#issue").click(function () {
+            $("#issue").click(function () {
             var productType;
+            var notQuiState=$("#notQuite").is(':checked');
 
             if ($("#productName").val() == null || $("#productName").val().trim().length == 0){
                 layer.msg("还没有输入宝贝名称哦");
@@ -444,14 +449,21 @@
                 layer.msg("还没有选择宝贝入手时间哦");
                 return false;
             }
-            if ($("#dateExpires").val() == null || $("#dateExpires").val() == ""){
-                layer.msg("还没有选择宝贝宝贝保修到期时间哦");
-                return false;
+            if(!notQuiState){
+                if ($("#dateExpires").val() == null || $("#dateExpires").val() == ""){
+                    layer.msg("还没有选择宝贝宝贝保修到期时间哦");
+                    return false;
+                }
+            }else {
+                $("#dateExpires").val("");
             }
-            if($("#date").val() > $("#dateExpires").val()){
-                layer.msg("入手时间不能大于保修到期时间哦");
-                return false;
-            }
+           if(!notQuiState){
+               if($("#date").val() > $("#dateExpires").val()){
+                   layer.msg("入手时间不能大于保修到期时间哦");
+                   return false;
+               }
+           }
+
             if($("#productPrice").val() == null || $("#productPrice").val() == ""){
                 layer.msg("亲,您忘了写宝贝价格啦！！");
                 return false;
@@ -464,7 +476,7 @@
                 layer.msg("为了买家能详细了解您的宝贝，请填写宝贝介绍");
                 return false;
             }
-            //+'&imgUrlList='+imgUrlList+'&token='+localStorage.getItem("eh_token")+'&productType='+productType
+
             $.ajax({
                 type: "post",
                 url: serverURL+"/eh/issuedProduct",
@@ -711,6 +723,16 @@
             }
 
             load_3_Rank(data.value);
+        });
+
+
+        //监听保修到期时间复选框
+        form.on('checkbox(notQuite)',function (data) {
+            if (data.elem.checked){
+                $("#dateExpires").attr("disabled",true);
+            }else {
+                $("#dateExpires").removeAttr("disabled");
+            }
         });
 
         //监听指定开关
