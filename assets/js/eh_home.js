@@ -5,7 +5,8 @@ var serverURL="http://localhost:8080";
 $(function () {
     //加载登录信息
     getheaderMessage();
-
+    //加载分类信息
+    productTypeInit();
     //导航栏下拉
     $('#xl').mouseover(function () {
         $('.menu-item-xiala').css('display','block');
@@ -15,8 +16,6 @@ $(function () {
     });
 
 
-
-    //产品分类初始化
 
 });
 
@@ -90,7 +89,7 @@ function adminExit() {
         $.ajax({
             type: "GET",
             url: serverURL+"/admin/productRank",
-            data:{rank:"",superId:""},
+            data:{rank:0,superId:0},
             dataType:"json",
             success: function(data){
                 if(data.errorCode=="500") {
@@ -98,82 +97,150 @@ function adminExit() {
                 }
                 if(data.errorCode=="200") {
                     // alert(data.list[0].productTypeRank ==1);
+                    var rank_1=new Array();
+                    var rank_2_JsonObj={};//json对象
+                    rank_2_JsonObj.proObj=[];//定义proObj 键
                     $.each(data.list, function(index, p) {
+                        //第一次遍历 取出一级类 并存到rank_1数组
                         if (p.productTypeRank ==1){
-                            $('#productRank').append(
-                            "<li class=\"yamm-tfw menu-item menu-item-has-children animate-dropdown dropdown\">\n" +
-                                "\t\t\t<a title=\""+p.productTypeName+"\" data-hover=\"dropdown\" href=\"login.html\" data-toggle=\"dropdown\" class=\"dropdown-toggle\" aria-haspopup=\"true\" target='_blank'>"+p.productTypeName+"</a>\n" +
-                                "\t\t\t<ul role=\"menu\" class=\" dropdown-menu\" style=\"min-height: 55.75px; visibility: visible; display: block; width: 540px; opacity: 1;\">\n" +
-                                "\t<li class=\"menu-item animate-dropdown menu-item-object-static_block\">\n" +
-                                "\t\t<div class=\"yamm-content\">\n" +
-                                "\t\t\t<div class=\"row bg-yamm-content bg-yamm-content-bottom bg-yamm-content-right\">\n" +
-                                "\t\t\t\t<div class=\"col-sm-12\">\n" +
-                                "\t\t\t\t\t<div class=\"vc_column-inner \">\n" +
-                                "\t\t\t\t\t\t<div class=\"wpb_wrapper\">\n" +
-                                "\t\t\t\t\t\t\t<div class=\"wpb_single_image wpb_content_element vc_align_left\">\n" +
-                                "\t\t\t\t\t\t\t\t<figure class=\"wpb_wrapper vc_figure\">\n" +
-                                "\t\t\t\t\t\t\t\t\t<div class=\"vc_single_image-wrapper vc_box_border_grey\">\n" +
-                                "\n" +
-                                "\t\t\t\t\t\t\t\t\t\t<img src=\"assets/images/megamenu-2.png\" class=\"vc_single_image-img attachment-full\" alt=\"\">\n" +
-                                "\t\t\t\t\t\t\t\t\t</div>\n" +
-                                "\t\t\t\t\t\t\t\t</figure>\n" +
-                                "\t\t\t\t\t\t\t</div>\n" +
-                                "\t\t\t\t\t\t</div>\n" +
-                                "\t\t\t\t\t</div>\n" +
-                                "\t\t\t\t</div>\n" +
-                                "\t\t\t</div>\n" +
-                                "\t\t\t<div class=\"row\">\n" +
-                                "\t\t\t\t<div class=\"col-sm-6\">\n" +
-                                "\t\t\t\t\t<div class=\"vc_column-inner \">\n" +
-                                "\t\t\t\t\t\t<div class=\"wpb_wrapper\">\n" +
-                                "\t\t\t\t\t\t\t<div class=\"wpb_text_column wpb_content_element \">\n" +
-                                "\t\t\t\t\t\t\t\t<div class=\"wpb_wrapper\">\n" +
-                                "\t\t\t\t\t\t\t\t\t<ul>\n" +
-                                "\t\t\t\t\t\t\t\t\t\t<li class=\"nav-title\">Computers &amp; Accessories</li>\n" +
-                                "\t\t\t\t\t\t\t\t\t\t<li><a href=\"#\">All Computers &amp; Accessories</a></li>\n" +
-                                "\t\t\t\t\t\t\t\t\t\t<li><a href=\"#\">Laptops, Desktops &amp; Monitors</a></li>\n" +
-                                "\t\t\t\t\t\t\t\t\t\t<li><a href=\"#\">Pen Drives, Hard Drives &amp; Memory Cards</a></li>\n" +
-                                "\t\t\t\t\t\t\t\t\t\t<li><a href=\"#\">Printers &amp; Ink</a></li>\n" +
-                                "\t\t\t\t\t\t\t\t\t\t<li><a href=\"#\">Networking &amp; Internet Devices</a></li>\n" +
-                                "\t\t\t\t\t\t\t\t\t\t<li><a href=\"#\">Computer Accessories</a></li>\n" +
-                                "\t\t\t\t\t\t\t\t\t\t<li><a href=\"#\">Software</a></li>\n" +
-                                "\t\t\t\t\t\t\t\t\t\t<li class=\"nav-divider\"></li>\n" +
-                                "\t\t\t\t\t\t\t\t\t\t<li><a href=\"#\"><span class=\"nav-text\">All Electronics</span><span class=\"nav-subtext\">Discover more products</span></a></li>\n" +
-                                "\t\t\t\t\t\t\t\t\t</ul>\n" +
-                                "\n" +
-                                "\t\t\t\t\t\t\t\t</div>\n" +
-                                "\t\t\t\t\t\t\t</div>\n" +
-                                "\t\t\t\t\t\t</div>\n" +
-                                "\t\t\t\t\t</div>\n" +
-                                "\t\t\t\t</div>\n" +
-                                "\t\t\t\t<div class=\"col-sm-6\">\n" +
-                                "\t\t\t\t\t<div class=\"vc_column-inner \">\n" +
-                                "\t\t\t\t\t\t<div class=\"wpb_wrapper\">\n" +
-                                "\t\t\t\t\t\t\t<div class=\"wpb_text_column wpb_content_element \">\n" +
-                                "\t\t\t\t\t\t\t\t<div class=\"wpb_wrapper\">\n" +
-                                "\t\t\t\t\t\t\t\t\t<ul>\n" +
-                                "\t\t\t\t\t\t\t\t\t\t<li class=\"nav-title\">Office &amp; Stationery</li>\n" +
-                                "\t\t\t\t\t\t\t\t\t\t<li><a href=\"#\">All Office &amp; Stationery</a></li>\n" +
-                                "\t\t\t\t\t\t\t\t\t\t<li><a href=\"#\">Pens &amp; Writing</a></li>\n" +
-                                "\t\t\t\t\t\t\t\t\t</ul>\n" +
-                                "\n" +
-                                "\t\t\t\t\t\t\t\t</div>\n" +
-                                "\t\t\t\t\t\t\t</div>\n" +
-                                "\t\t\t\t\t\t</div>\n" +
-                                "\t\t\t\t\t</div>\n" +
-                                "\t\t\t\t</div>\n" +
-                                "\t\t\t</div>\n" +
-                                "\t\t</div>\n" +
-                                "\t</li>\n" +
-                                "</ul>\n" +
-                                "\t\t</li>\n"
-                            );
+                           rank_1.push(p.productTypeName);
+                           //第二次遍历，取出与一级类对应的二级类 并存到rank_2_JsonObj对象下的proObj数组中
+                           $.each(data.list,function (idx,x) {
+                               if (x.superType == p.productTypeCode){
+                                   var jsonObj= {"superTypeName":p.productTypeName,"superTypeCode":p.productTypeCode,"id":x.id , "productTypeName":x.productTypeName,"productTypeCode":x.productTypeCode,"superType":x.superType};
+                                   rank_2_JsonObj.proObj.push(jsonObj);//插入json对象中
+                               }
+                           });
                         }
 
                     });
-                    // $('#productRank').append(
-                    //
-                    // );
+
+                    //遍历一级类 显示到前台html上
+                    for (var i=0;i<rank_1.length;i++){
+
+                        var alinkText,floatDivBox,floatDivBox_1=null,floatDivBox_2=null,floatDivBox_3=null,strlink_1="",strlink_2="",strlink_3="";
+                        //3个if 都用来判断一级类的个数能否使用一行3个分类来显示完毕 如不能   则进行相应的a链接删除
+                        if (rank_1[i+2] == null && rank_1[i+1] != null){
+                            alinkText=  "\t\t\t\t<a href=\"login_1.html\" target=\"_blank\" title=\""+rank_1[i]+"\">"+rank_1[i]+"</a>\n" +
+                                "\t\t\t\t\t/\n" +
+                                "\t\t\t\t<a href=\"login_2.html\" target=\"_blank\" title=\""+rank_1[i+1]+"\">"+rank_1[i+1]+"</a>\n";
+
+                            //遍历json对象中的2级分类 并显示到前台html中
+                            for(var x=0;x<rank_2_JsonObj.proObj.length;x++){
+                                // 判断当前一级分类名称是否与json对象中数组下的superTypeName一致  如一致则说明该二级分类属于当前一级分类  下面如同~~
+                                if (rank_1[i] == rank_2_JsonObj.proObj[x].superTypeName){
+                                    strlink_1+="\t\t\t\t\t\t<a href=\"\" target=\"_blank\" title=\""+rank_2_JsonObj.proObj[x].productTypeName+"\">"+rank_2_JsonObj.proObj[x].productTypeName+"</a>\n";
+                                    floatDivBox_1="\t\t\t\t<div class=\"list-float-1\">\n" +
+                                        "\t\t\t\t\t<h5>"+rank_1[i]+"</h5>\n" +
+                                        "\t\t\t\t\t<p>\n" +
+                                        strlink_1+
+                                        "\t\t\t\t\t</p>\n" +
+                                        "\t\t\t\t</div>\n" ;
+                                }
+
+                                if (rank_1[i+1] == rank_2_JsonObj.proObj[x].superTypeName){
+                                    strlink_2+="\t\t\t\t\t\t<a href=\"\" target=\"_blank\" title=\""+rank_2_JsonObj.proObj[x].productTypeName+"\">"+rank_2_JsonObj.proObj[x].productTypeName+"</a>\n";
+                                    floatDivBox_2="\t\t\t\t<div class=\"list-float-1\">\n" +
+                                        "\t\t\t\t\t<h5>"+rank_1[i+1]+"</h5>\n" +
+                                        "\t\t\t\t\t<p>\n" +
+                                        strlink_2+
+                                        "\t\t\t\t\t</p>\n" +
+                                        "\t\t\t\t</div>\n" ;
+                                }
+                                    // floatDivBox_3=null;
+                            }
+
+                        }else if(rank_1[i+1] == null) {
+                            alinkText=  "\t\t\t\t<a href=\"login_1.html\" target=\"_blank\" title=\""+rank_1[i]+"\">"+rank_1[i]+"</a>\n";
+
+                            for(var x=0;x<rank_2_JsonObj.proObj.length;x++){
+                                if (rank_1[i] == rank_2_JsonObj.proObj[x].superTypeName){
+                                    strlink_1+="\t\t\t\t\t\t<a href=\"\" target=\"_blank\" title=\""+rank_2_JsonObj.proObj[x].productTypeName+"\">"+rank_2_JsonObj.proObj[x].productTypeName+"</a>\n";
+                                    floatDivBox_1="\t\t\t\t<div class=\"list-float-1\">\n" +
+                                        "\t\t\t\t\t<h5>"+rank_1[i]+"</h5>\n" +
+                                        "\t\t\t\t\t<p>\n" +
+                                        strlink_1+
+                                        "\t\t\t\t\t</p>\n" +
+                                        "\t\t\t\t</div>\n" ;
+                                }
+                                // floatDivBox_2=null;
+                                // floatDivBox_3=null;
+                            }
+
+                        }else {
+                            alinkText=  "\t\t\t\t<a href=\"login_1.html\" target=\"_blank\" title=\""+rank_1[i]+"\">"+rank_1[i]+"</a>\n" +
+                                "\t\t\t\t\t/\n" +
+                                "\t\t\t\t<a href=\"login_2.html\" target=\"_blank\" title=\""+rank_1[i+1]+"\">"+rank_1[i+1]+"</a>\n"+
+                                "\t\t\t\t\t/\n" +
+                                "\t\t\t\t<a href=\"login_2.html\" target=\"_blank\" title=\""+rank_1[i+2]+"\">"+rank_1[i+2]+"</a>\n";
+
+                            for(var x=0;x<rank_2_JsonObj.proObj.length;x++){
+                                if (rank_1[i] == rank_2_JsonObj.proObj[x].superTypeName){
+                                    strlink_1+="\t\t\t\t\t\t<a href=\"\" target=\"_blank\" title=\""+rank_2_JsonObj.proObj[x].productTypeName+"\">"+rank_2_JsonObj.proObj[x].productTypeName+"</a>\n";
+                                    floatDivBox_1="\t\t\t\t<div class=\"list-float-1\">\n" +
+                                        "\t\t\t\t\t<h5>"+rank_1[i]+"</h5>\n" +
+                                        "\t\t\t\t\t<p>\n" +
+                                        strlink_1+
+                                        "\t\t\t\t\t</p>\n" +
+                                        "\t\t\t\t</div>\n" ;
+                                }
+
+                                if (rank_1[i+1] == rank_2_JsonObj.proObj[x].superTypeName){
+                                    strlink_2+="\t\t\t\t\t\t<a href=\"\" target=\"_blank\" title=\""+rank_2_JsonObj.proObj[x].productTypeName+"\">"+rank_2_JsonObj.proObj[x].productTypeName+"</a>\n";
+                                    floatDivBox_2="\t\t\t\t<div class=\"list-float-1\">\n" +
+                                        "\t\t\t\t\t<h5>"+rank_1[i+1]+"</h5>\n" +
+                                        "\t\t\t\t\t<p>\n" +
+                                        strlink_2+
+                                        "\t\t\t\t\t</p>\n" +
+                                        "\t\t\t\t</div>\n" ;
+                                }
+
+                                if (rank_1[i+2] == rank_2_JsonObj.proObj[x].superTypeName){
+                                    strlink_3+="\t\t\t\t\t\t<a href=\"\" target=\"_blank\" title=\""+rank_2_JsonObj.proObj[x].productTypeName+"\">"+rank_2_JsonObj.proObj[x].productTypeName+"</a>\n";
+                                    floatDivBox_3="\t\t\t\t<div class=\"list-float-1\">\n" +
+                                        "\t\t\t\t\t<h5>"+rank_1[i+2]+"</h5>\n" +
+                                        "\t\t\t\t\t<p>\n" +
+                                        strlink_3+
+                                        "\t\t\t\t\t</p>\n" +
+                                        "\t\t\t\t</div>\n" ;
+                                }
+                            }
+                        }
+
+                        //判断 二级分类下的容器是否为空 如为空则说明该一级分类下没有二级分类
+                        if (floatDivBox_3 != null && floatDivBox_2 != null && floatDivBox_1 != null){
+                            floatDivBox=floatDivBox_1+floatDivBox_2+floatDivBox_3;
+                        }else  if (floatDivBox_1 != null && floatDivBox_2 != null && floatDivBox_3 == null){
+                            floatDivBox=floatDivBox_1+floatDivBox_2;
+                        }else if(floatDivBox_1 != null && floatDivBox_2 == null && floatDivBox_3 == null){
+                            floatDivBox=floatDivBox_1;
+                        }else if(floatDivBox_1 != null && floatDivBox_2 == null && floatDivBox_3 != null){
+                            floatDivBox=floatDivBox_1+floatDivBox_3;
+                        }else if(floatDivBox_1 == null && floatDivBox_2 != null && floatDivBox_3 == null){
+                            floatDivBox=floatDivBox_2;
+                        }else  if(floatDivBox_1 == null && floatDivBox_2 != null && floatDivBox_3 != null){
+                            floatDivBox=floatDivBox_2+floatDivBox_3;
+                        }else if(floatDivBox_1 == null && floatDivBox_2 == null && floatDivBox_3 != null){
+                            floatDivBox=floatDivBox_3;
+                        }else {
+                            floatDivBox="";
+                        }
+
+                        $('#productRank').append(
+                            "<li class=\"nav-list\">\n" +
+                            "\t\t\t<p>\n" +
+                            alinkText+
+                            "\t\t\t</p>\n" +
+                            "\n" +
+                            "\t\t\t<div class=\"list-float\" >\n" +
+                            floatDivBox+
+                            "\t\t\t</div>\n" +
+                            "\n" +
+                            "\t\t</li>\n"
+                        );
+                        i=i+2;
+                    }
+
                 }
 
             }
