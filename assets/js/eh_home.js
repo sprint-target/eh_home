@@ -1,9 +1,9 @@
 //全局变量定义（必须引用此文件）---------------------------------------------------------------------------------
 var serverURL="http://localhost:8080";
-
+var likeBox;
 $(function () {
     //加载登录信息
-   // getheaderMessage();
+    getheaderMessage();
     //加载分类信息
     productTypeInit();
     getBlock_one();
@@ -330,7 +330,7 @@ $(document).on('click',".mid-link",function(){
                         "\n" +
                         "\t\t\t<div class=\"onsale-products\">\n" +
                         "\t\t\t\t<div class=\"onsale-product\">\n" +
-                        "\t\t\t\t\t<a href=\"shop.html\">\n" +
+                        "\t\t\t\t\t<a href=\"single-product.html?pid="+list[0].id+"&target=index&pageType=newSell\">\n" +
                         "\t\t\t\t\t\t<div class=\"product-thumbnail\">\n" +
                         "\t\t\t\t\t\t\t<img class=\"wp-post-image\" data-echo=\"assets/images/onsale-product.jpg\" src=\"assets/images/blank.gif\" alt=\"\"></div>\n" +
                         "\n" +
@@ -358,9 +358,9 @@ $(document).on('click',".mid-link",function(){
                         "\t\t\t\t\t<div class=\"deal-countdown-timer\">\n" +
                         "\t\t\t\t\t\t<div class=\"marketing-text text-xs-center\">稍早前的出售:</div>\n" +
                         "\t\t\t\t\t\t<div style=\"text-align: center; overflow:hidden;\">\n" +
-                        "\t\t\t\t\t\t\t<p><a href=\"#\" title=\""+list[1].productName+"\">"+list[1].productName+"</a></p>\n" +
-                        "\t\t\t\t\t\t\t<p><a href=\"#\" title=\""+list[2].productName+"\">"+list[2].productName+"</a></p>\n" +
-                        "\t\t\t\t\t\t\t<p><a href=\"#\" title=\""+list[3].productName+"\">"+list[3].productName+"</a></p>\n" +
+                        "\t\t\t\t\t\t\t<p><a href=\"single-product.html?pid="+list[1].id+"&target=index&pageType=newSell\" title=\""+list[1].productName+"\">"+list[1].productName+"</a></p>\n" +
+                        "\t\t\t\t\t\t\t<p><a href=\"single-product.html?pid="+list[2].id+"&target=index&pageType=newSell\" title=\""+list[2].productName+"\">"+list[2].productName+"</a></p>\n" +
+                        "\t\t\t\t\t\t\t<p><a href=\"single-product.html?pid="+list[3].id+"&target=index&pageType=newSell\" title=\""+list[3].productName+"\">"+list[3].productName+"</a></p>\n" +
                         "\t\t\t\t\t\t</div>\n" +
                         "\n" +
                         "\t\t\t\t\t\t\n" +
@@ -373,6 +373,7 @@ $(document).on('click',".mid-link",function(){
                     );
                     var likeBox="",newLeaveBox="",topSeeNumberBox="",firstClass="product first",midClass="product",lastClass="product last";
 
+                    //猜你喜欢模块数据加载
                     for(var li=4;li<10;li++){
                         var boxClass="";
                         if (li == 4 || li == 7) boxClass=firstClass;
@@ -382,7 +383,7 @@ $(document).on('click',".mid-link",function(){
                             "\t\t\t\t<div class=\"product-outer\">\n" +
                             "    <div class=\"product-inner\">\n" +
                             "        <span class=\"loop-product-categories\"><a href=\"product-category.html\" rel=\"tag\">"+list[li].productType.productTypeName+"</a></span>\n" +
-                            "        <a href=\"single-product.html\">\n" +
+                            "        <a href=\"single-product.html?pid="+list[li].id+"&target=index&pageType=guessLike\">\n" +
                             "            <h3>"+list[li].productName+"</h3>\n" +
                             "            <div class=\"product-thumbnail\">\n" +
                             "                <img src=\"assets/images/blank.gif\" data-echo=\"assets/images/products/1.jpg\" class=\"img-responsive\" alt=\"\">\n" +
@@ -422,7 +423,7 @@ $(document).on('click',".mid-link",function(){
                         "\t\t\t\t\t\t\t\t<div class=\"product-outer\">\n" +
                         "\t\t\t\t\t\t\t\t\t<div class=\"product-inner\">\n" +
                         "\t\t\t\t\t\t\t\t\t\t<span class=\"loop-product-categories\"><a href=\"product-category.html\" rel=\"tag\">"+list[lea].productType.productTypeName+"</a></span>\n" +
-                        "\t\t\t\t\t\t\t\t\t\t<a href=\"single-product.html\">\n" +
+                        "\t\t\t\t\t\t\t\t\t\t<a href=\"single-product.html?pid="+list[lea].id+"&target=index&pageType=newLeave\">\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t<h3>"+list[lea].productName+"</h3>\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t<div class=\"product-thumbnail\">\n" +
                         "\n" +
@@ -464,7 +465,7 @@ $(document).on('click',".mid-link",function(){
                             "\t\t\t\t<div class=\"product-outer\">\n" +
                             "\t\t\t\t\t<div class=\"product-inner\">\n" +
                             "\t\t\t\t\t\t<span class=\"loop-product-categories\"><a href=\"product-category.html\" rel=\"tag\">"+list[topi].productType.productTypeName+"</a></span>\n" +
-                            "\t\t\t\t\t\t<a href=\"single-product.html\">\n" +
+                            "\t\t\t\t\t\t<a href=\"single-product.html?pid="+list[topi].id+"&target=index&pageType=hotProduct\">\n" +
                             "\t\t\t\t\t\t\t<h3>"+list[topi].productName+"</h3>\n" +
                             "\t\t\t\t\t\t\t<div class=\"product-thumbnail\">\n" +
                             "\t\t\t\t\t\t\t\t<img src=\"assets/images/blank.gif\" data-echo=\"assets/images/products/1.jpg\" class=\"img-responsive\" alt=\"\">\n" +
