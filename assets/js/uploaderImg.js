@@ -549,7 +549,7 @@
         //上传成功 返回图片路径
         uploader.on( 'uploadSuccess', function( file, response ) {
             var imgurl = response._raw; //上传图片的路径
-            imgurl=JSON.parse(imgurl);//转欢Json对象
+            imgurl=JSON.parse(imgurl);//转换Json对象
             // console.log(imgurl.message);
 
             $('#' + file.id).addClass('upload-state-success').find(".state").text("已上传");

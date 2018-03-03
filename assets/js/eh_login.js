@@ -79,7 +79,9 @@ $(function () {
                 }
                 if(data.errorCode=="200") {
                     localStorage.setItem("eh_token",data.item.token);
+                    addCookieCartService();
                     window.location.href="index.html";
+
                 }
                 if (data.errorCode == "405"){
                     layer.msg(data.message);
@@ -165,5 +167,57 @@ function loginWhere() {
             $('#password').siblings('label').find('.form-title').html("");
         }
     });
+
+    function  addCookieCartService() {
+        var cartObj=[];
+        var  cookieCart=getCookie("cart");
+        if(cookieCart != null){
+            cartObj=cookieCart;
+        }else {
+            cartObj=JSON.stringify(cartObj);
+        }
+
+        $.ajax({
+            type: "post",
+            url: "http://localhost:8080/shoppingCart/addCookieShoppingCart",
+            data:{"token":localStorage.getItem("eh_token"),"ds":cartObj},
+            dataType:"json",
+            success: function(data){
+                if (data.errorCode == "200"){
+                  delCookie("cart");
+                }
+
+            }
+        });
+
+    }
+
+
+    function delCookie(name) {                   //删除一个cookie
+        var exp = new Date();
+        exp.setTime(exp.getTime() - 1);
+        var cval=getCookie(name);
+        if(cval!=null)
+            document.cookie= name + "="+cval+";expires="+exp.toUTCString();
+    }
+
+    //获取cookie
+    function getCookie(c_name)
+    {
+        if (document.cookie.length>0)
+        {
+            c_start=document.cookie.indexOf(c_name + "=")
+            if (c_start!=-1)
+            {
+                c_start=c_start + c_name.length+1
+                c_end=document.cookie.indexOf(";",c_start)
+                if (c_end==-1) c_end=document.cookie.length
+                return unescape(document.cookie.substring(c_start,c_end))
+            }
+        }
+        return null;
+    }
+
+
 
 });
