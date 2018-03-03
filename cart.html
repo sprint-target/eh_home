@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>二货 - 我的购物车</title>
+        <title>我的购物车 - 二货</title>
 
         <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css" media="all" />
         <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css" media="all" />
@@ -73,87 +73,57 @@
             <tr>
                 <th class="product-remove">&nbsp;</th>
                 <th class="product-thumbnail">&nbsp;</th>
-                <th class="product-name">产品</th>
-                <th class="product-price">价格</th>
+                <th class="product-name">宝贝</th>
+                <th class="product-price">单价</th>
                 <th class="product-quantity">数量</th>
-                <th class="product-subtotal">总价格</th>
+                <th class="product-subtotal">总价</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="cartList">
 
-            <tr class="cart_item">
 
-                <td class="product-remove">
-                    <a class="remove" href="#">×</a>
-                </td>
+            <!--<tr class="cart_item">-->
 
-                <td class="product-thumbnail">
-                    <a href="single-product.html"><img width="180" height="180" src="assets/images/products/2.jpg" alt=""></a>
-                </td>
+                <!--<td class="product-remove">-->
+                    <!--<a data-product_sku="5487FB8/26" data-product_id="2606" title="Remove this item" class="remove" href="#">×</a>-->
+                <!--</td>-->
 
-                <td data-title="Product" class="product-name">
-                    <a href="single-product.html">这贼略贵的东西劝你不要买</a>
-                </td>
+                <!--<td class="product-thumbnail">-->
+                    <!--<a href="single-product.html"><img width="180" height="180" alt="LaptopYoga" class="wp-post-image" src="assets/images/products/1.jpg"></a>-->
+                <!--</td>-->
 
-                <td data-title="Price" class="product-price">
-                    <span class="amount">￥1,999.00</span>
-                </td>
+                <!--<td data-title="Product" class="product-name">-->
+                    <!--<a href="single-product.html">平板电脑白色EliteBook Revolve 810 G2</a>-->
+                <!--</td>-->
 
-                <td data-title="Quantity" class="product-quantity">
-                    <div class="quantity buttons_added">
-                        <input type="button" class="minus" value="-">
-                        <label>数量:</label>
-                        <input type="number"  class="input-text qty text" name="xx" title="数量" value="1"  min="1">
-                        <input type="button" class="plus" value="+">
-                    </div>
-                </td>
+                <!--<td data-title="Price" class="product-price">-->
+                    <!--<span class="amount">￥1,300.00</span>-->
+                <!--</td>-->
 
-                <td data-title="Total" class="product-subtotal">
-                    <span class="amount">￥1,999.00</span>
-                </td>
-            </tr>
-            <tr class="cart_item">
+                <!--<td data-title="Quantity" class="product-quantity">-->
+                    <!--<div class="quantity buttons_added"><input type="button" class="minus" value="-">-->
+                        <!--<label>数量:</label>-->
+                        <!--<input type="number" class="input-text qty text" title="数量" value="1" name="xxx" min="1" step="1">-->
+                        <!--<input type="button" class="plus" value="+">-->
+                    <!--</div>-->
+                <!--</td>-->
 
-                <td class="product-remove">
-                    <a data-product_sku="5487FB8/26" data-product_id="2606" title="Remove this item" class="remove" href="#">×</a>
-                </td>
+                <!--<td data-title="Total" class="product-subtotal">-->
+                    <!--<span class="amount">￥1,300.00</span>-->
+                <!--</td>-->
+            <!--</tr>-->
+            <!--<tr>-->
+                <!--<td class="actions" colspan="6">-->
 
-                <td class="product-thumbnail">
-                    <a href="single-product.html"><img width="180" height="180" alt="LaptopYoga" class="wp-post-image" src="assets/images/products/1.jpg"></a>
-                </td>
-
-                <td data-title="Product" class="product-name">
-                    <a href="single-product.html">平板电脑白色EliteBook Revolve 810 G2</a>
-                </td>
-
-                <td data-title="Price" class="product-price">
-                    <span class="amount">￥1,300.00</span>
-                </td>
-
-                <td data-title="Quantity" class="product-quantity">
-                    <div class="quantity buttons_added"><input type="button" class="minus" value="-">
-                        <label>数量:</label>
-                        <input type="number" class="input-text qty text" title="数量" value="1" name="xxx" min="1" step="1">
-                        <input type="button" class="plus" value="+">
-                    </div>
-                </td>
-
-                <td data-title="Total" class="product-subtotal">
-                    <span class="amount">￥1,300.00</span>
-                </td>
-            </tr>
-            <tr>
-                <td class="actions" colspan="6">
-
-                    <div class="coupon">
-                        <label for="coupon_code">Coupon:</label> <input type="text" placeholder="优惠码" value="" id="coupon_code" class="input-text" name="coupon_code"> <input type="submit" value="应用优惠卷" name="apply_coupon" class="button">
-                    </div>
-                    <input type="submit" value="更新购物车" name="update_cart" class="button">
-                    <div class="wc-proceed-to-checkout">
-                        <a class="checkout-button button alt wc-forward" href="checkout.html">结算</a>
-                    </div>
-                </td>
-            </tr>
+                    <!--<div class="coupon">-->
+                        <!--<label for="coupon_code">Coupon:</label> <input type="text" placeholder="优惠码" value="" id="coupon_code" class="input-text" name="coupon_code"> <input type="submit" value="应用优惠卷" name="apply_coupon" class="button">-->
+                    <!--</div>-->
+                    <!--<input type="submit" value="更新购物车" name="update_cart" class="button">-->
+                    <!--<div class="wc-proceed-to-checkout">-->
+                        <!--<a class="checkout-button button alt wc-forward" href="checkout.html">结算</a>-->
+                    <!--</div>-->
+                <!--</td>-->
+            <!--</tr>-->
         </tbody>
     </table>
 </form>
@@ -336,6 +306,94 @@
             })(jQuery);
            $(function () {
                getheaderMessage();
+
+
+               $(document).on('click',".minus",function(){
+                  var pNumber= $(this).siblings(".pNumber").val();
+                  if (pNumber > 1){
+                      $(this).siblings(".pNumber").val(pNumber-1);
+                      totolPrice($(this).siblings(".pNumber"));
+                  }
+               });
+
+
+               $(document).on('click',".plus",function(){
+                   var pNumber= $(this).siblings(".pNumber").val();
+                   $(this).siblings(".pNumber").val(parseInt(pNumber)+1);
+                   totolPrice($(this).siblings(".pNumber"));
+               });
+
+               $(document).on('change',".pNumber",function(){
+                   totolPrice($(this));
+               });
+
+               // 用prototype对Number进行扩展 //参数：保留几位小数，货币符号，千位分隔符，小数分隔符
+               Number.prototype.formatMoney = function (places, symbol, thousand, decimal) {
+                   places = !isNaN(places = Math.abs(places)) ? places : 2;
+                   symbol = symbol !== undefined ? symbol : "$";
+                   thousand = thousand || ",";
+                   decimal = decimal || ".";
+                   var number = this,
+                       negative = number < 0 ? "-" : "",
+                       i = parseInt(number = Math.abs(+number || 0).toFixed(places), 10) + "",
+                       j = (j = i.length) > 3 ? j % 3 : 0;
+                   return symbol + negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
+               };
+
+               function totolPrice(e) {
+                   var dan=$(e).parents(".product-quantity").siblings(".product-price").children(".amount").text();
+                   var totolNumber= $(e).parents(".product-quantity").siblings(".product-subtotal").children(".amount");
+                   var pNumber = $(e).val();
+                   // totolNumber.text("￥"+Number(dan.slice(1))*pNumber+".00");
+                   totolNumber.text((Number(dan.slice(1))*pNumber).formatMoney(2,"￥",",","."));
+
+               }
+               $.ajax({
+                   type: "GET",
+                   url: serverURL+"/shoppingCart/cartList",
+                   data:{"token":localStorage.getItem("eh_token")},
+                   dataType:"json",
+                   success: function(data){
+                        if (data.errorCode == "200"){
+                            var cartBox="";
+                           $.each(data.list,function (index,c) {
+                                cartBox+="<tr class=\"cart_item\">\n" +
+                                    "\n" +
+                                    "                <td class=\"product-remove\">\n" +
+                                    "                    <a class=\"remove\" href=\"#\">×</a>\n" +
+                                    "                </td>\n" +
+                                    "\n" +
+                                    "                <td class=\"product-thumbnail\">\n" +
+                                    "                    <a href=\"single-product.html\"><img width=\"180\" height=\"180\" src=\"assets/images/products/2.jpg\" alt=\"\"></a>\n" +
+                                    "                </td>\n" +
+                                    "\n" +
+                                    "                <td data-title=\"Product\" class=\"product-name\">\n" +
+                                    "                    <a href=\"single-product.html\">"+c.product.productName+"</a>\n" +
+                                    "                </td>\n" +
+                                    "\n" +
+                                    "                <td data-title=\"Price\" class=\"product-price\">\n" +
+                                    "                    <span class=\"amount\">￥"+c.product.productPrice+".00</span>\n" +
+                                    "                </td>\n" +
+                                    "\n" +
+                                    "                <td data-title=\"Quantity\" class=\"product-quantity\">\n" +
+                                    "                    <div class=\"quantity buttons_added\">\n" +
+                                    "                        <input type=\"button\" class=\"minus\" value=\"-\">\n" +
+                                    "                        <label>数量:</label>\n" +
+                                    "                        <input type=\"number\"  class=\"input-text qty text pNumber\" name=\"pNumber\" title=\"数量\" value=\""+c.number+"\"  min=\"1\">\n" +
+                                    "                        <input type=\"button\" class=\"plus\" value=\"+\">\n" +
+                                    "                    </div>\n" +
+                                    "                </td>\n" +
+                                    "\n" +
+                                    "                <td data-title=\"Total\" class=\"product-subtotal\" style='width: 229px;'>\n" +
+                                    "                    <span class=\"amount\">￥"+c.product.productPrice*c.number+"</span>\n" +
+                                    "                </td>\n" +
+                                    "            </tr>";
+                           }) ;
+                            $("#cartList").append(cartBox);
+                        }
+                   }
+
+               })
            });
         </script>
     </body>
