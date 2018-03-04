@@ -1,6 +1,5 @@
 $(function () {
     //是否登录判断，用户进入登录页面，如已存在登录信息(token存在并解析正确)，则直接挑转到index.html
-    loginWhere();
     var localIp="116.9.184.156"; //存储IP
     var sliderStatus=false;//是否完成滑块验证
     var sliderObj=false;
@@ -80,7 +79,6 @@ $(function () {
                 if(data.errorCode=="200") {
                     localStorage.setItem("eh_token",data.item.token);
                     addCookieCartService();
-                    window.location.href="index.html";
 
                 }
                 if (data.errorCode == "405"){
@@ -99,31 +97,7 @@ $(function () {
     });
 
 
-//判断是否登录
-function loginWhere() {
-    if ( localStorage.getItem("eh_token") == null){
-        return false;
-    }
-    $.ajax({
-        type: "GET",
-        url: "http://localhost:8080/user/getLoginMessage",
-        data:{"token":localStorage.getItem("eh_token")},
-        dataType:"json",
-        success: function(data){
-            if(data.errorCode=="500") {
-                localStorage.removeItem("eh_token");
-            }
-            if(data.errorCode=="200") {
-                window.location.href='index.html';
-            }
-            if (data.errorCode == "501"){
-                localStorage.removeItem("eh_token");
-            }
-        }
-    });
-    return false;
 
-}
 
     //初始化滑块
     function loadSlider() {
@@ -168,6 +142,7 @@ function loginWhere() {
         }
     });
 
+    //登录成功 cookie存入购物车
     function  addCookieCartService() {
         var cartObj=[];
         var  cookieCart=getCookie("cart");
@@ -185,8 +160,14 @@ function loginWhere() {
             success: function(data){
                 if (data.errorCode == "200"){
                   delCookie("cart");
+                    window.location.href="index.html";
+                }else {
+                    window.location.href="index.html";
                 }
 
+            },
+            error:function () {
+                window.location.href="index.html";
             }
         });
 
@@ -194,11 +175,14 @@ function loginWhere() {
 
 
     function delCookie(name) {                   //删除一个cookie
+
         var exp = new Date();
         exp.setTime(exp.getTime() - 1);
         var cval=getCookie(name);
-        if(cval!=null)
+        if(cval!=null){
             document.cookie= name + "="+cval+";expires="+exp.toUTCString();
+        }
+
     }
 
     //获取cookie

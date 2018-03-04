@@ -496,9 +496,11 @@
                     }
                     if(data.errorCode != "200" || data.errorCode == "500"){
                         layer.msg(data.message);
+
                     }
                     if(data.errorCode=="200") {
                         layer.msg(data.message);
+                        window.location.href='index.html';
                     }
                 },
                 error:function(data) {

@@ -604,6 +604,8 @@
                        }else {
                            cartObj=JSON.stringify(cartObj);
                        }
+                   }else {
+                       cartObj=JSON.stringify(cartObj);
                    }
 
                    $.ajax({
@@ -626,7 +628,9 @@
                                        cartObj.push(lsObj);
                                    });
                                    var str = JSON.stringify(cartObj);
-                                   setCookie("cart",str,30);
+                                   if( str.length > 2){
+                                       setCookie("cart",str,30);
+                                   }
                                }
                            }
                            if (data.errorCode == "500"){
@@ -659,6 +663,13 @@
                                    "\t\t\t</div>";
                            }
 
+                           var pPrice=p.productPrice,expire=p.expire;
+                           pPrice=pPrice.formatMoney(2,"￥","",".");
+                            if (expire == null){
+                                expire="无";
+                            }else {
+                                expire=getLocalTime(expire);
+                            }
                            //商品详情数据加载
                            $("#productPage").prepend("<div class=\"single-product-wrapper\">\n" +
                                "\t\t\t\t\t\t<div class=\"product-images-wrapper\">\n" +
@@ -739,7 +750,7 @@
                                "\t</div><!-- .brand -->\n" +
                                "\n" +
                                "\t<div class=\"availability in-stock\">\n" +
-                               "        出售数量： <span style='font-size: 18px;'>"+p.productNumber+"</span>\n" +
+                               "        在售数量： <span style='font-size: 18px;'>"+p.productNumber+"</span>\n" +
                                "\t</div><!-- .availability -->\n" +
                                "\n" +
                                "\t<hr class=\"single-product-title-divider\" />\n" +
@@ -749,17 +760,15 @@
                                "\t</div><!-- .action-buttons -->\n" +
                                "\n" +
                                "\t<div itemprop=\"description\">\n" +
-                               // "\t\t<ul>\n" +
-                               // "\t\t\t<li>4.5英寸高清触摸屏(1280 x 720)</li>\n" +
-                               // "\t\t\t<li>Android 4.4 KitKat操作系统</li>\n" +
-                               // "\t\t\t<li>1.4 GHz四核™处理器</li>\n" +
-                               // "\t\t\t<li>20 MP和28个像素CMOS后置摄像头前面</li>\n" +
-                               // "\t\t</ul>\n" +
+                                "\t\t<ul>\n" +
+                                "\t\t\t<li>入手时间："+getLocalTime(p.buyTime)+"</li>\n" +
+                                "\t\t\t<li>保修到期时间："+expire+"</li>\n" +
+                                "\t\t</ul>\n" +
                                "\t\t<p class='productIntroduce'>"+p.productIntroduce+"</p>\n" +
                                "\t</div><!-- .description -->\n" +
                                "\n" +
                                "\t<div itemprop=\"offers\">\n" +
-                               "\t\t<p class=\"price\"><span class=\"electro-price\"><ins><span class=\"amount\">￥"+p.productPrice+".00</span></ins></span></p>\n" +
+                               "\t\t<p class=\"price\"><span class=\"electro-price\"><ins><span class=\"amount\">"+pPrice+"</span></ins></span></p>\n" +
                                "\n" +
                                "\t</div><!-- /itemprop -->\n" +
                                "\n" +
