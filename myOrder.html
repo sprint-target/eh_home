@@ -33,32 +33,40 @@
         .order-th{
             width: 100%;
             border-bottom: 1px solid #9f9f9f;
-            border-top: 1px solid #9f9f9f;
-            height: 40px;
 
+
+            height: 40px;
+            margin-bottom: 10px;
+            text-align: center;
         }
         .order_th_list{
-            line-height: 34px;
+            line-height: 50px;
             height: 34px;
             margin-top:2px;
             text-align: center;
             color: #999;
+            float: left;
         }
 
         .order-tbody{
             width: 98%;
             height: 135px;
-            border-bottom: 1px solid #9f9f9f;
-            margin:3px auto;
+            border-bottom: 1px solid #ccc;
+            margin:3px auto 20px auto;
+            border-bottom-left-radius: 3px;
+            border-bottom-right-radius: 3px;
+
 
         }
 
         .order_code{
-            border: 1px solid #9f9f9f;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
             width: 100%;
             height:35px;
             line-height: 35px;
             color: #999;
+            background-color: #D7C10E;
 
         }
 
@@ -69,14 +77,14 @@
 
         .order_img{
             height:80px;
-            width: 10%;
+            width: 15%;
             margin-top: 8px;
-            margin-left: 14px;
+            margin-left: 2%;
             float: left;
         }
 
         .order_name{
-            width: 19%;
+            width: 20%;
             height:99px;
             color: #999;
             float: left;
@@ -84,14 +92,16 @@
             vertical-align: middle;
 
         }
-        .order_price{
-            width: 7%;
+        .order_message{
             float: left;
             height:99px;
             line-height: 99px;
             text-align: center;
+            display: table;
+            vertical-align: middle;
 
         }
+
     </style>
 </head>
 
@@ -131,31 +141,36 @@
                         <article class="page type-page status-publish hentry">
                             <header class="entry-header"><h1 itemprop="name" class="entry-title" >我的订单</h1></header>
                             <div class="order-th">
-                                <div class="order_th_list" style="width: 40%">
-                                        商品信息
+                                <div style="width: 98%; margin: 0px auto">
+                                    <div class="order_th_list" style="width: 37%">
+                                            商品信息
+                                    </div>
+
+                                    <div class="order_th_list" style="width: 10%">
+                                        金额
+                                    </div>
+
+                                    <div class="order_th_list" style="width: 10%">
+                                        数量
+                                    </div>
+
+                                    <div class="order_th_list" style="width: 20%">
+                                        备注
+                                    </div>
+
+                                    <div class="order_th_list" style="width: 20%">
+                                        日期
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="order-tbody">
-                                <div class="order_code">
-                                    &nbsp;&nbsp;&nbsp;订单号:9053015285134
-                                </div>
-                                <div class="order_body">
-                                    <div class="order_img">
-                                        <img src="assets/images/products/6.jpg"  width="80px" height="100%">
-                                    </div>
-                                    <div class="order_name">
-                                        <p style=" vertical-align: middle; display:table-cell; line-height:17px;">
-                                            啊大大阿萨德阿斯蒂芬撒啊实打实大师多阿萨德阿萨德撒的阿萨德啊大大阿萨德阿斯蒂芬撒啊实打实大师多阿萨德阿萨德撒的阿萨德
-                                        </p>
+                               
 
-                                    </div>
 
-                                    <div class="order_price">
-                                        ¥199.99
-                                    </div>
-                                </div>
                             </div>
+
+
 
 
 
@@ -283,6 +298,7 @@
 <script src="assets/js/eh_home.js"></script>
 <script src="assets/js/layer/2.4/layer.js"></script>
 <script src="assets/js/Var.js"></script>
+<script src="assets/js/eh_order.js"></script>
 
 <script>
     (function($) {
