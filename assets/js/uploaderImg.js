@@ -153,7 +153,7 @@
             swf: 'assets/js/webuploader/0.1.5/Uploader.swf',
             chunked: false,
             chunkSize: 512 * 1024,
-            server: 'http://localhost:8080/uploader/fileImg',
+            server: serverURL+"/uploader/fileImg",
             xhrFields:{withCredentials:true},
             // runtimeOrder: 'flash',
 

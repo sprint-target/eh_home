@@ -27,7 +27,7 @@ $(function () {
      function getIPStatus(ipxx) {
          $.ajax({
              type: "GET",
-             url: "http://localhost:8080/user/getIPStatus",
+             url: serverURL+"/user/getIPStatus",
              data:"localIp="+ipxx,
              dataType:"json",
              success: function(data){
@@ -70,7 +70,7 @@ $(function () {
 
         $.ajax({
             type: "POST",
-            url: "http://localhost:8080/user/login",
+            url: serverURL+"/user/login",
             data:$('#myform').serialize()+"&localIp="+localIp+"&sliderStatus="+sliderStatus+"&sliderObj="+sliderObj,
             dataType:"json",
             success: function(data){
@@ -106,7 +106,7 @@ function loginWhere() {
     }
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/user/getLoginMessage",
+        url: serverURL+"/user/getLoginMessage",
         data:{"token":localStorage.getItem("eh_token")},
         dataType:"json",
         success: function(data){
@@ -179,7 +179,7 @@ function loginWhere() {
 
         $.ajax({
             type: "post",
-            url: "http://localhost:8080/shoppingCart/addCookieShoppingCart",
+            url: serverURL+"/shoppingCart/addCookieShoppingCart",
             data:{"token":localStorage.getItem("eh_token"),"ds":cartObj},
             dataType:"json",
             success: function(data){
