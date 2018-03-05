@@ -312,6 +312,8 @@ $(document).on('click',".mid-link",function(){
                     }else {
                         newText=list[0].degree+" 新";
                     }
+                    var newPrice=list[0].productPrice;
+                    newPrice=newPrice.formatMoney(2,"￥","",".");
                     $("#Block_one").append(
                         "<div class=\"deals-block col-lg-4\">\n" +
                         "\t\t<section class=\"section-onsale-product\">\n" +
@@ -338,7 +340,7 @@ $(document).on('click',".mid-link",function(){
                         "\n" +
                         "\t\t\t\t\t<span class=\"price\">\n" +
                         "\t\t\t\t\t\t<span class=\"electro-price\">\n" +
-                        "\t\t\t\t\t\t\t<ins><span class=\"amount\">￥"+list[0].productPrice+".00</span></ins>\n" +
+                        "\t\t\t\t\t\t\t<ins><span class=\"amount\">"+newPrice+"</span></ins>\n" +
                         "\n" +
                         "\t\t\t\t\t\t</span>\n" +
                         "\t\t\t\t\t</span>\n" +
@@ -392,7 +394,7 @@ $(document).on('click',".mid-link",function(){
                             "        <div class=\"price-add-to-cart\">\n" +
                             "            <span class=\"price\">\n" +
                             "                <span class=\"electro-price\">\n" +
-                            "                    <ins><span class=\"amount\"> ￥"+list[li].productPrice+".00</span></ins>\n" +
+                            "                    <ins><span class=\"amount\"> "+list[li].productPrice.formatMoney(2,"￥","",".")+"</span></ins>\n" +
                             "                                        <span class=\"amount\"> </span>\n" +
                             "                </span>\n" +
                             "            </span>\n" +
@@ -434,7 +436,7 @@ $(document).on('click',".mid-link",function(){
                         "\t\t\t\t\t\t\t\t\t\t<div class=\"price-add-to-cart\">\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t<span class=\"price\">\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"electro-price\">\n" +
-                        "\t\t\t\t\t\t\t\t\t\t\t\t\t<ins><span class=\"amount\">￥"+list[lea].productPrice+".00</span></ins>\n" +
+                        "\t\t\t\t\t\t\t\t\t\t\t\t\t<ins><span class=\"amount\">"+list[lea].productPrice.formatMoney(2,"￥","",".")+"</span></ins>\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t\t</span>\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t</span>\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t<a rel=\"nofollow\" href=\"single-product.html\" class=\"button add_to_cart_button\">添加到购物车</a>\n" +
@@ -474,7 +476,7 @@ $(document).on('click',".mid-link",function(){
                             "\t\t\t\t\t\t<div class=\"price-add-to-cart\">\n" +
                             "            <span class=\"price\">\n" +
                             "                <span class=\"electro-price\">\n" +
-                            "                    <ins><span class=\"amount\"> ￥"+list[topi].productPrice+".00</span></ins>\n" +
+                            "                    <ins><span class=\"amount\"> "+list[topi].productPrice.formatMoney(2,"￥","",".")+"</span></ins>\n" +
                             "                                        <span class=\"amount\"> </span>\n" +
                             "                </span>\n" +
                             "            </span>\n" +
@@ -539,3 +541,33 @@ $(document).on('click',".mid-link",function(){
             }
         });
     }
+
+// 用prototype对Number进行扩展 //参数：保留几位小数，货币符号，千位分隔符，小数分隔符
+Number.prototype.formatMoney = function (places, symbol, thousand, decimal) {
+    places = !isNaN(places = Math.abs(places)) ? places : 2;
+    symbol = symbol !== undefined ? symbol : "$";
+    thousand = thousand || "";
+    decimal = decimal || ".";
+    var number = this,
+        negative = number < 0 ? "-" : "",
+        i = parseInt(number = Math.abs(+number || 0).toFixed(places), 10) + "",
+        j = (j = i.length) > 3 ? j % 3 : 0;
+    return symbol + negative + (j ? i.substr(0, j) + thousand : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thousand) + (places ? decimal + Math.abs(number - i).toFixed(places).slice(2) : "");
+};
+
+function getLocalTime(nS) {
+    ns= new Date(parseInt(nS));
+    return formatDate(ns);
+}
+/**
+ * 格式化Date类型
+ */
+function formatDate(now) {
+    var year=now.getYear();
+    var month=now.getMonth()+1;
+    var date=now.getDate();
+    var hour=now.getHours();
+    var minute=now.getMinutes();
+    var second=now.getSeconds();
+    return "20"+(year-100)+"-"+month+"-"+date+" "+hour+":"+minute+":"+second;
+}
