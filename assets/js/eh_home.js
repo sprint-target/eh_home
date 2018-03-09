@@ -30,8 +30,6 @@ $(document).on('click',".mid-link",function(){
         $(this).addClass("nav-link mid-link");
     });
     $(this).addClass("active");
-    // alert($(".mid-link").length == $(".midBox").length);
-    // alert($(".midBox").eq(0).text());
     $(".midBox").each(function () {
         $(this).removeClass("midBoxShow showBox");
         $(this).addClass("hideBox");

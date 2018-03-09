@@ -8,15 +8,24 @@
 
        $(function () {
 
-           function delCookie(name) {                   //删除一个cookie
-               var exp = new Date();
-               exp.setTime(exp.getTime() - 1);
-               var cval=getCookie(name);
-               if(cval!=null)
-                   document.cookie= name + "="+cval+";expires="+exp.toUTCString();
-           }
+
 
        });
+       var focus=0;
+       // 网页得到焦点
+       window.onfocus = function(){
+           focus+=1;
+           if (focus == 2 ){
+               alert("得到焦点");
+           }
+
+       }
+       // 网页失去焦点
+       window.onblur = function(){
+           if (focus == 2){
+               focus=0;
+           }
+       }
     </script>
 </head>
 <body>

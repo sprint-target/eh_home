@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>我的购物车 - 二货</title>
+        <title>确认订单 - 二货</title>
 
         <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css" media="all" />
         <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css" media="all" />
@@ -65,26 +65,79 @@
 		<div id="primary" class="content-area">
 			<main id="main" class="site-main">
 				<article class="page type-page status-publish hentry" id="cartBox">
-					<header class="entry-header"><h1 itemprop="name" class="entry-title">购物车</h1></header>
+					<header class="entry-header"><h1 itemprop="name" class="entry-title">确认订单</h1></header>
 
 
     <table class="shop_table shop_table_responsive cart">
         <thead>
             <tr>
-                <th class="product-remove">&nbsp;</th>
-                <th class="product-thumbnail">&nbsp;</th>
-                <th class="product-name">宝贝</th>
+                <th class="product-thumbnail" style="width: 220px;"></th>
+                <th class="product-name">宝贝信息</th>
                 <th class="product-price">单价</th>
                 <th class="product-quantity">数量</th>
-                <th class="product-subtotal">总价</th>
+                <th class="product-subtotal">小计</th>
             </tr>
         </thead>
         <tbody id="cartList">
+        <tr style="background-color: #fbfcff;">
+            <td>
+                <span style="font-size: 14px;" >卖家：<a href="#" >xxxxx</a></span>
+            </td>
+        </tr>
+        <tr class="cart_item" style="border-bottom: 1px  dotted #999;background-color: #fbfcff;">;
+            <td class="product-thumbnail">
+                <a href="single-product.html"><img width="180" height="180" src="assets/images/products/2.jpg" alt=""></a>
+            </td>
 
+            <td data-title="Product" class="product-name">
+                <a href="single-product.html?pid=78&amp;target=shoppingCart&amp;pageType=cart" target="_blank" style="display: block;">詹姆斯T学</a>
+             </td>
+
+            <td data-title="Price" class="product-price">
+                <span class="amount">￥328.00</span>
+            </td>
+
+            <td data-title="Quantity" class="product-quantity">
+               1
+            </td>
+
+            <td data-title="Total" class="product-subtotal" style="width: 229px;">
+                <span class="amount">￥984.00</span>
+            </td>
+        </tr>
+        <tr style="border-bottom: 1px  dotted #80b2ff;background-color: #f2f7ff;height: 75px;">
+            <td style="border: none;" colspan="5" ><span style="margin-right: 15px; font-size: 12px;color: #666;">给卖家留言:</span><input type="text" style="width: 400px;height: 30px;border-radius: 15px;font-size: 12px;color: #0C0C0C" name="message" placeholder="填写您需要告诉卖家的信息"></td>
+        </tr>
         </tbody>
     </table>
+                    <div class="cart-collaterals" style="padding-top: 3em;">
+
+                        <div class="cart_totals ">
+
+                            <h2>购物车总计</h2>
+
+                            <table class="shop_table shop_table_responsive">
+
+                                <tbody>
+                                <tr class="cart-subtotal">
+                                    <th>小计</th>
+                                    <td data-title="Subtotal"><span class="amount">￥3483.00</span></td>
+                                </tr>
 
 
+                                <tr class="shipping">
+                                    <th>其他费用</th>
+                                    <td data-title="Shipping"><span class="amount">￥0.00</span></td>
+                                </tr>
+
+                                <tr class="order-total">
+                                    <th>实付款</th>
+                                    <td data-title="Total"><strong><span class="amount" style="color: orangered;font-size:18px;">￥3483.00</span></strong> </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <button name="addOrder" type="button" style="float: right;">提交订单</button>    </div>
+                    </div>
 				</article>
 			</main><!-- #main -->
 		</div><!-- #primary -->
@@ -237,209 +290,6 @@
            $(function () {
                getheaderMessage();
 
-//            点击-号
-               $(document).on('click',".minus",function(){
-                  var pNumber= $(this).siblings(".pNumber").val();
-                  if (pNumber > 1){
-                      $(this).siblings(".pNumber").val(pNumber-1);
-                      totolPrice($(this).siblings(".pNumber"));
-                      pushCartService($(this).siblings(".pid").val(), $(this).siblings(".pNumber").val(),$(this),"-");
-                  }
-               });
-
-//点击+号
-               $(document).on('click',".plus",function(){
-                   var pNumber= $(this).siblings(".pNumber").val();
-                   var seeNumber = $(this).parents(".product-quantity").siblings(".product-name").find(".seeNumber").text();
-
-                   if ((parseInt(pNumber)+1) <= seeNumber){
-                       $(this).siblings(".pNumber").val(parseInt(pNumber)+1);
-                       totolPrice($(this).siblings(".pNumber"));
-                       pushCartService($(this).siblings(".pid").val(), $(this).siblings(".pNumber").val(),$(this),"+");
-                   }
-
-               });
-
-               
-               $(document).on('change',".pNumber",function(){
-                   totolPrice($(this));
-               });
-
-//               删除操作
-               $(document).on('click',".remove",function(){
-                   var cartId=$(this).parents(".product-remove").siblings(".product-quantity").find(".pid").val();
-                   delCratProduct(cartId,$(this));
-               });
-
-//商品总价运算
-               function totolPrice(e) {
-                   var dan=$(e).parents(".product-quantity").siblings(".product-price").children(".amount").text();
-                   var totolNumber= $(e).parents(".product-quantity").siblings(".product-subtotal").children(".amount");
-                   var pNumber = $(e).val();
-                   totolNumber.text((parseFloat(dan.slice(dan.indexOf("￥")+1).replace(/[^0-9-.]/g, ''))*pNumber).formatMoney(2,"￥","","."));
-
-               }
-               $.ajax({
-                   type: "GET",
-                   url: serverURL+"/shoppingCart/cartList",
-                   data:{"token":localStorage.getItem("eh_token")},
-                   dataType:"json",
-                   success: function(data){
-                        if (data.errorCode == "200"){
-                            var cartBox="",jsBox,totalOf=0;
-                           $.each(data.list,function (index,c) {
-                               totalOf+=c.product.productPrice*c.number;
-                               var price=c.product.productPrice;
-                               price=price.formatMoney(2,"￥","",".");
-                               var totalPrice=c.product.productPrice*c.number;
-                               totalPrice=totalPrice.formatMoney(2,"￥","",".");
-                               var degree=c.product.degree;
-                               if (degree == 9){
-                                   degree=degree+" 成新";
-                               }else {
-                                   degree=degree+" 新";
-                               }
-                                cartBox+="<tr class=\"cart_item\">\n" +
-                                    "\n" +
-                                    "                <td class=\"product-remove\">\n" +
-                                    "                    <a class=\"remove\" href=\"javascript:void(0);\">×</a>\n" +
-                                    "                </td>\n" +
-                                    "\n" +
-                                    "                <td class=\"product-thumbnail\">\n" +
-                                    "                    <a href=\"single-product.html\"><img width=\"180\" height=\"180\" src=\"assets/images/products/2.jpg\" alt=\"\"></a>\n" +
-                                    "                </td>\n" +
-                                    "\n" +
-                                    "                <td data-title=\"Product\" class=\"product-name\">\n" +
-                                    "                    <a href=\"single-product.html?pid="+c.product.id+"&target=shoppingCart&pageType=cart\" target='_blank' style='display: block;'>"+c.product.productName+"</a>\n" +
-                                        "<span style='display: block;padding-top: 10px;font-size: 12px;color: #818a91;'>"+degree+"</span>"+
-                                    "<span style='display: block;padding-top: 5px;font-size: 12px;color: #818a91;'>在售数量: <span class='seeNumber'>"+c.product.productNumber+"</span></span>"+
-                                    "                </td>\n" +
-                                    "\n" +
-                                    "                <td data-title=\"Price\" class=\"product-price\">\n" +
-                                    "                    <span class=\"amount\">"+price+"</span>\n" +
-                                    "                </td>\n" +
-                                    "\n" +
-                                    "                <td data-title=\"Quantity\" class=\"product-quantity\">\n" +
-                                    "                    <div class=\"quantity buttons_added\">\n" +
-                                    "                        <input type=\"button\" class=\"minus\" value=\"-\">\n" +
-                                    "                        <label>数量:</label>\n" +
-                                    "                        <input type=\"number\"  class=\"input-text qty text pNumber\" readonly=\"readonly\" name=\"pNumber\" title=\"数量\" value=\""+c.number+"\"  min=\"1\">\n" +
-                                        "<input type='hidden' name='pid' class='pid' value='"+c.id+"'>"+
-                                    "                        <input type=\"button\" class=\"plus\" value=\"+\">\n" +
-                                    "                    </div>\n" +
-                                    "                </td>\n" +
-                                    "\n" +
-                                    "                <td data-title=\"Total\" class=\"product-subtotal\" style='width: 229px;'>\n" +
-                                    "                    <span class=\"amount\">"+totalPrice+"</span>\n" +
-                                    "                </td>\n" +
-                                    "            </tr>";
-                           }) ;
-
-                           jsBox="<div class=\"cart-collaterals\" style=\"padding-top: 3em;\">\n" +
-                               "\n" +
-                               "    <div class=\"cart_totals \">\n" +
-                               "\n" +
-                               "        <h2>购物车总计</h2>\n" +
-                               "\n" +
-                               "        <table class=\"shop_table shop_table_responsive\">\n" +
-                               "\n" +
-                               "            <tbody>\n" +
-                               "                <tr class=\"cart-subtotal\">\n" +
-                               "                    <th>小计</th>\n" +
-                               "                    <td data-title=\"Subtotal\"><span class=\"amount\">"+totalOf.formatMoney(2,"￥","",".")+"</span></td>\n" +
-                               "                </tr>\n" +
-                               "\n" +
-                               "\n" +
-                               "                <tr class=\"shipping\">\n" +
-                               "                    <th>其他费用</th>\n" +
-                               "                    <td data-title=\"Shipping\"><span class='amount'>￥0.00</span></td>\n" +
-                               "                </tr>\n" +
-                               "\n" +
-                               "                <tr class=\"order-total\">\n" +
-                               "                    <th>总计</th>\n" +
-                               "                    <td data-title=\"Total\"><strong><span class=\"amount\" style=\"color: orangered;font-size:18px;\" >"+totalOf.formatMoney(2,"￥","",".")+"</span></strong> </td>\n" +
-                               "                </tr>\n" +
-                               "            </tbody>\n" +
-                               "        </table>\n" +
-                               "<button name='addOrder' type='button' style='float: right;'>结算</button>"+
-                               "    </div>\n" +
-                               "</div>";
-
-                            $("#cartList").append(cartBox);
-                            $("#cartBox").append(jsBox);
-
-                        }
-                   }
-
-               });
-
-               //修改商品数量
-               function pushCartService(cartId,pNumber,e,type) {
-                  $.ajax({
-                      type:"POST",
-                      url:serverURL+"/shoppingCart/updateCart",
-                      data:{"token":localStorage.getItem("eh_token"),"cartId":cartId,"pNumber":pNumber},
-                      dataType:'json',
-                      success:function (data) {
-                          if (data.errorCode == "200"){
-//                              layer.msg(data.message);
-
-                              var subtotal=$(".cart-subtotal").find(".amount").text();//小计
-                              subtotal=parseFloat(subtotal.slice(1));
-                              var ptotal=$(e).parents(".product-quantity").siblings(".product-subtotal").find(".amount").text();//宝贝总价
-                              ptotal=parseFloat(ptotal.slice(ptotal.indexOf("￥")+1));
-
-
-                              if (type == "+"){
-                                  $(".cart-subtotal").find(".amount").text((subtotal+(ptotal/pNumber)).formatMoney(2,"￥","","."));
-                                  var xj=$(".cart-subtotal").find(".amount").text();
-                                  xj=parseFloat(xj.slice(xj.indexOf("￥")+1));
-                                  var qt=$(".shipping").find(".amount").text();
-                                  qt=parseFloat(qt.slice(qt.indexOf("￥")+1));
-                                  $(".order-total").find(".amount").text((xj+qt).formatMoney(2,"￥","","."));
-                              }
-                              if (type == "-"){
-                                  $(".cart-subtotal").find(".amount").text((subtotal-(ptotal/pNumber)).formatMoney(2,"￥","","."));
-                                  var xj=$(".cart-subtotal").find(".amount").text();
-                                  xj=parseFloat(xj.slice(xj.indexOf("￥")+1));
-                                  var qt=$(".shipping").find(".amount").text();
-                                  qt=parseFloat(qt.slice(qt.indexOf("￥")+1));
-                                  $(".order-total").find(".amount").text((xj+qt).formatMoney(2,"￥","","."));
-                              }
-
-
-
-
-                          }
-                          if (data.errorCode == "500"){
-                              layer.msg(data.message);
-                          }
-                      }
-                  })
-               }
-
-               //删除商品
-               function delCratProduct(cartId,e) {
-                   $.ajax({
-                       type:"POST",
-                       url:serverURL+"/shoppingCart/delCartProduct",
-                       data:{"token":localStorage.getItem("eh_token"),"cartId":cartId},
-                       dataType:'json',
-                       success:function (data) {
-                           if (data.errorCode == "200"){
-                               layer.msg(data.message);
-                                $(e).parents(".cart_item").remove();
-                               var qt=$(".shipping").find(".amount").text();
-                               qt=parseFloat(qt.slice(qt.indexOf("￥")+1));
-                               $(".cart-subtotal").find(".amount").text(data.item.subtotal.formatMoney(2,"￥","","."));
-                               $(".order-total").find(".amount").text((data.item.subtotal+qt).formatMoney(2,"￥","","."));
-                           }
-                           if (data.errorCode == "500"){
-                               layer.msg(data.message);
-                           }
-                       }
-                   });
-               }
            });
         </script>
     </body>

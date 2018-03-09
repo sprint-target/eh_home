@@ -9,7 +9,7 @@ function loginWhere() {
     }
     $.ajax({
         type: "GET",
-        url: "http://localhost:8080/user/getLoginMessage",
+        url: serverURL+"/user/getLoginMessage",
         data:{"token":localStorage.getItem("eh_token")},
         dataType:"json",
         success: function(data){
