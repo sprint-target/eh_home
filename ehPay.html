@@ -5,8 +5,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>确认订单 - 二货</title>
-
+        <title>支付订单 - 二货</title>
+        <link rel="stylesheet" href="assets/js/layui/css/layui.css"  media="all">
         <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css" media="all" />
         <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css" media="all" />
         <link rel="stylesheet" type="text/css" href="assets/css/animate.min.css" media="all" />
@@ -29,35 +29,39 @@
 
         <link rel="shortcut icon" href="assets/images/fav-icon.png">
         <link rel="stylesheet" href="assets/css/eh_home.css">
+
         <style>
-            .buy-message{
-                width: 400px;
-                height: 30px;
-                border-radius: 5px;
-                font-size: 12px;
-                color: #0C0C0C;!important;
-                transition: all 0.6s ease;
-                line-height: 1.2;
+        table th {
+            text-align: center;
+        }
+    
+            .aliPay:hover{
+                background-color: #00aaee;
             }
-            .buy-message:focus{
-                height: 70px;
+            .wePay:hover{
+                background-color: #00c800;
+            }
+            .e-currencyPay:hover{
+                background-color: #e21836;
+            }
+            .orderItem{
+                text-align: center;
+                margin-bottom: 15px;
+            }
+            .orderItem tr td{
+                font-size: 12px;
+            }
+            .orderItem tr:hover:not(:first-child){
+                background-color: #4e5465;
 
             }
-            .item-tr{
-                border-bottom: 1px  dotted #999;
-                background-color: #fbfcff;
+            .orderItem-ul{
+                width: 650px;
+                position: absolute;
+                left: 20px;
+                top: 20px;
+                z-index: 2;
             }
-            .tr-message{
-                height: 75px;
-                border-bottom: 1px  dotted #80b2ff;
-                background-color: #f2f7ff;
-            }
-            .tr-message span{
-                margin-right: 15px;
-                font-size: 12px;
-                color: #666;
-            }
-
         </style>
     </head>
 
@@ -95,24 +99,19 @@
 		<div id="primary" class="content-area">
 			<main id="main" class="site-main">
 				<article class="page type-page status-publish hentry" id="cartBox">
-					<header class="entry-header"><h1 itemprop="name" class="entry-title">确认订单</h1></header>
+					<header class="entry-header"><h1 itemprop="name" class="entry-title">支付订单</h1></header>
 
 
-    <table class="shop_table shop_table_responsive cart">
+    <table class="shop_table shop_table_responsive cart" style="text-align: center;">
         <thead>
             <tr>
-                <th class="product-thumbnail" style="width: 220px;"></th>
-                <th class="product-name">宝贝信息</th>
-                <th class="product-price">单价</th>
-                <th class="product-quantity">数量</th>
-                <th class="product-subtotal">小计</th>
+                <th class="product-name">交易详情</th>
+                <th class="product-price">交易时间</th>
+                <th class="product-quantity">交易总额</th>
+                <th class="product-subtotal">操作</th>
             </tr>
         </thead>
         <tbody id="cartList">
-
-
-
-
 
 
         </tbody>
@@ -125,7 +124,7 @@
 </div><!-- #content -->
             </header>
 
-                <footer id="colophon" class="site-footer" style="margin-top: 60px; ">
+                <footer id="colophon" class="site-footer"  style="margin-top: 50px;">
                     <div class="footer-bottom-widgets">
                         <div class="container">
                             <div class="row">
@@ -243,7 +242,24 @@
     <script src="assets/js/layer/2.4/layer.js"></script>
     <script src="assets/js/Var.js"></script>
     <script src="assets/js/eh_home.js"></script>
+    <script src="assets/js/layui/layui.js" charset="utf-8"></script>
            <script>
+
+
+                   layui.use('element', function(){
+                       var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+                       //监听导航点击
+                       element.on('nav(item)', function(elem){
+                           //console.log(elem)
+
+                       });
+
+                       element.init();
+                   });
+
+
+
            (function($) {
 
                $('.minus').click(function () {
@@ -269,143 +285,81 @@
            $(function () {
                getheaderMessage();
 
-               var key=getUrlParam("pKey");
+
+               var key=getUrlParam("payKey");
                key=uncompileStr(key);
-               if(key == "success"){
-                   $.ajax({
-                       type: "GET",
-                       url: serverURL+"/shoppingCart/cartList",
-                       data:{"token":localStorage.getItem("eh_token")},
-                       dataType:"json",
-                       success: function(data){
-                           if (data.errorCode == "200"){
-                               cartList=data.list;
-                               if(cartList.length >0){
-                                   var orderBox="",subOrder="",totalOf=0;
-                                   $.each(cartList,function (index,c) {
-                                       totalOf+=c.product.productPrice*c.number;
-                                       var totalP=c.product.productPrice*c.number;
-                                       orderBox+=" <tr class=\"product-tr\" >\n" +
-                                           "            <td>\n" +
-                                           "                <span style=\"font-size: 14px;\" >卖家：<a href=\"#\" >"+c.product.user.userName+"</a></span>\n" +
-                                           "            </td>\n" +
-                                           "        </tr>\n" +
-                                           "        <tr class=\"cart_item item-tr\" >\n" +
-                                           "            <td class=\"product-thumbnail\">\n" +
-                                           "                <a href=\"single-product.html?pid="+c.product.id+"&target=subOrder&pageType=orderImg\"><img width=\"180\" height=\"180\" src=\"assets/images/products/2.jpg\" title=\""+c.product.productName+"\"></a>\n" +
-                                           "            </td>\n" +
-                                           "\n" +
-                                           "            <td data-title=\"Product\" class=\"product-name\">\n" +
-                                           "                <a href=\"single-product.html?pid="+c.product.id+"&target=subOrder&pageType=order\" target=\"_blank\" style=\"display: block;\">"+c.product.productName+"</a>\n" +
-                                           "             </td>\n" +
-                                           "\n" +
-                                           "            <td data-title=\"Price\" class=\"product-price\">\n" +
-                                           "                <span class=\"amount\">"+c.product.productPrice.formatMoney(2,"￥","",".")+"</span>\n" +
-                                           "            </td>\n" +
-                                           "\n" +
-                                           "            <td data-title=\"Quantity\" class=\"product-quantity\">\n" +
-                                           +c.number+
-                                           "            </td>\n" +
-                                           "            <td data-title=\"Total\" class=\"product-subtotal\" style=\"width: 229px;\">\n" +
-                                           "                <span class=\"amount\">"+totalP.formatMoney(2,"￥","",".")+"</span>\n" +
-                                           "            </td>\n" +
-                                           "        </tr>\n" +
-                                           "        <tr class=\"tr-message\" >\n" +
-                                           "            <td  colspan=\"5\" ><span  >给卖家留言:</span><textarea  style=\"resize:none;overflow-y:hidden\"  class=\"buy-message\"name=\"orderMessage\" placeholder=\"填写您需要告诉卖家的信息\"></textarea>" +
-                                           "<input type='hidden' class='pid'  value='"+c.product.id+"'>"+
-                                           "</td>\n" +
-                                           "        </tr>" ;
-                                   });
 
-                                   subOrder="<div class=\"cart-collaterals\" style=\"padding-top: 3em;\">\n" +
-                                       "\n" +
-                                       "                        <div class=\"cart_totals \">\n" +
-                                       "\n" +
-                                       "                            <h2>购物车总计</h2>\n" +
-                                       "\n" +
-                                       "                            <table class=\"shop_table shop_table_responsive\">\n" +
-                                       "\n" +
-                                       "                                <tbody>\n" +
-                                       "                                <tr class=\"cart-subtotal\">\n" +
-                                       "                                    <th>小计</th>\n" +
-                                       "                                    <td data-title=\"Subtotal\"><span class=\"amount\">"+totalOf.formatMoney(2,"￥","",".")+"</span></td>\n" +
-                                       "                                </tr>\n" +
-                                       "\n" +
-                                       "\n" +
-                                       "                                <tr class=\"shipping\">\n" +
-                                       "                                    <th>其他费用</th>\n" +
-                                       "                                    <td data-title=\"Shipping\"><span class=\"amount\">￥0.00</span></td>\n" +
-                                       "                                </tr>\n" +
-                                       "\n" +
-                                       "                                <tr class=\"order-total\">\n" +
-                                       "                                    <th>实付款</th>\n" +
-                                       "                                    <td data-title=\"Total\"><strong><span class=\"amount\" style=\"color: orangered;font-size:18px;\">"+totalOf.formatMoney(2,"￥","",".")+"</span></strong> </td>\n" +
-                                       "                                </tr>\n" +
-                                       "                                </tbody>\n" +
-                                       "                            </table>\n" +
-                                       "                            <button name=\"addOrder\" type=\"button\" id='submitOrder' style=\"float: right;\">提交订单</button>    </div>\n" +
-                                       "                    </div>";
-
-                                   $("#cartList").append(orderBox);
-                                   $("#cartBox").append(subOrder);
-                               }
-                           }
-                           if (data.errorCode == "500"){
-                               layer.msg(data.message);
-                           }
-                           if (data.errorCode == "501"){
-                               layer.msg(data.message);
-                               localStorage.removeItem("eh_token");
-                           }
-                       },
-                       error:function (data) {
-                           layer.msg("哎呀,系统出错了...");
-                       }
-                   });
-
-               }
-
-
-               //提交订单
-               $(document).on('click',"#submitOrder",function(){
-                    var cartObj=[];
-                    for (var i=0;i<$('.pid').length;i++){
-                        var lsObj={"pid":parseInt($('.pid:eq('+i+')').val()),"message":$('.pid:eq('+i+')').siblings(".buy-message").val()};
-                        cartObj.push(lsObj);
-                    }
-                   cartObj=JSON.stringify(cartObj);
+               if (key == "successDoPay"){
                    $.ajax({
                        type: "POST",
-                       url: serverURL + "/order/order",
-                       data: {"token": localStorage.getItem("eh_token"),"ds": cartObj},
+                       url: serverURL + "/order/payOrder",
+                       data: {"token": localStorage.getItem("eh_token")},
                        dataType: "json",
                        success: function (data) {
                             if (data.errorCode == "200"){
-                                layer.msg("提交成功,正在跳到支付页面...",{
-                                    time: 1000 //2秒关闭（如果不配置，默认是3秒）
-                                },function(){
-                                    var key=compileStr("successDoPay");
-                                   window.location.href="ehPay.html?payKey="+key;
-                                });
+                                var cartList=data.list;
+                                if(cartList.length >0){
+                                    var orderBox="",orderSize=cartList.length,mergeText="";
+                                    if (orderSize >1){
+                                        mergeText="合并 | "+orderSize+"笔订单";
+                                    }else {
+                                        mergeText=" 1笔订单";
+                                    }
+                                    $.each(cartList,function (index,c) {
+                                        orderBox+= " <tr>\n" +
+                                            "     <td>"+c.product.productName+"</td>\n" +
+                                            "  <td>"+c.orderCode+"</td>\n" +
+                                            "  <td>"+c.sellUser.userName+"</td>\n" +
+                                            " <td>"+c.orderPrice.formatMoney(2,'￥','','.')+"</td>\n" +
+                                            "  </tr>\n";
+                                    });
 
-                           }
-                           if (data.errorCode == "500"){
-                                layer.msg(data.message);
-                                return false;
-                           }
-                           if (data.errorCode == "501"){
-                               layer.msg(data.message);
-                               localStorage.removeItem("eh_token");
-                               return false;
-                           }
-                       },
-                       error:function () {
-                           layer.msg("抱歉,我们出了点问题...");
+
+                                    $("#cartList").append(
+                                        "        <tr style=\" background-color: #fbfcff;height: 60px;font-size: 12px;\">\n" +
+                                        "            <td width=\"400\">"+orderSize+"笔订单</td>\n" +
+                                        "            <td>"+getLocalTime(data.item.orderTime)+"</td>\n" +
+                                        "            <td style=\"color: orangered;font-size: 18px;font-weight: bold;\">"+data.item.totalPrice.formatMoney(2,'￥','','.')+"</td>\n" +
+                                        "            <td width=\"300\">\n" +
+                                        "                您可以选择以下付款方式:\n" +
+                                        "            </td>\n" +
+                                        "        </tr>\n" +
+                                        "        <tr style=\" background-color: #f2f7ff;height: 90px;\">\n" +
+                                        "            <td colspan=\"2\" style=\"position: relative;\">\n" +
+                                        "                <ul class=\"layui-nav layui-nav-tree layui-bg-cyan layui-inline orderItem-ul\" lay-filter=\"item\">\n" +
+                                        "                    <li class=\"layui-nav-item\">\n" +
+                                        "                        <a href=\"javascript:;\">"+mergeText+"<span class=\"layui-nav-more\"></span></a>\n" +
+                                        "                        <dl class=\"layui-nav-child\">\n" +
+                                        "                            <table width=\"650\" class=\"orderItem\">\n" +
+                                        "                                <tbody><tr>\n" +
+                                        "                                    <td>名称</td>\n" +
+                                        "                                    <td>订单号</td>\n" +
+                                        "                                    <td>卖家</td>\n" +
+                                        "                                    <td>金额</td>\n" +
+                                        "                                </tr>\n" +
+                                        orderBox+
+                                        "                            </tbody></table>\n" +
+                                        "                        </dl>\n" +
+                                        "                    </li>\n" +
+                                        "                <span class=\"layui-nav-bar\" style=\"top: 22.5px; height: 0px; opacity: 0;\"></span></ul>\n" +
+                                        "            </td>\n" +
+                                        "            <td colspan=\"2\" style=\"text-align: right;\">\n" +
+                                        "                <button class=\"aliPay\" value=\"aliPay\" title=\"支付宝支付\">支付宝</button>\n" +
+                                        "                <button class=\"wePay\" value=\"wePay\" title=\"微信支付\">微信</button>\n" +
+                                        "                <button class=\"e-currencyPay\" value=\"e-currencyPay\" title=\"快捷/网银支付\">快捷/网银</button>\n" +
+                                        "                <button class=\"otherPay\" value=\"otherPay\" title=\"其他付款方式支付\">其他付款方式</button>\n" +
+                                        "            </td>\n" +
+                                        "\n" +
+                                        "        </tr>");
+
+                                }
+                            }
                        }
                    });
-               });
+               }
 
-                //获取url中的参数
+
+               //获取url中的参数
                function getUrlParam(name){
                    //构造一个含有目标参数的正则表达式对象
                    var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
@@ -415,9 +369,7 @@
                    if (r!=null) return unescape(r[2]);
                    return null;
                }
-
-
-                //对字符串进行解密
+               //对字符串进行解密
                function uncompileStr(code){
                    code=unescape(code);
                    var c=String.fromCharCode(code.charCodeAt(0)-code.length);
@@ -427,18 +379,6 @@
                    }
                    return c;
                }
-
-               //对字符串进行加密
-               function compileStr(code){
-                   var c=String.fromCharCode(code.charCodeAt(0)+code.length);
-                   for(var i=1;i<code.length;i++)
-                   {
-                       c+=String.fromCharCode(code.charCodeAt(i)+code.charCodeAt(i-1));
-                   }
-                   return escape(c);
-               }
-
-
            });
         </script>
     </body>

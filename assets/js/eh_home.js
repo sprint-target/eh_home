@@ -396,15 +396,14 @@ $(document).on('click',".mid-link",function(){
                             "                                        <span class=\"amount\"> </span>\n" +
                             "                </span>\n" +
                             "            </span>\n" +
-                            "            <a rel=\"nofollow\" href=\"single-product.html\" title=\"添加到购物车\" class=\"button add_to_cart_button\">添加到购物车</a>\n" +
+                            "            <a rel=\"nofollow\" href=\"javascript:void(0);\"  title=\"添加到购物车\" class=\"button add_to_cart_button\">添加到购物车</a>\n" +
+                            "<input type='hidden' class='pid' value='"+list[li].id+"'>"+
                             "        </div><!-- /.price-add-to-cart -->\n" +
                             "\n" +
                             "        <div class=\"hover-area\">\n" +
                             "            <div class=\"action-buttons\">\n" +
                             "\n" +
                             "                <a href=\"#\" rel=\"nofollow\" class=\"add_to_wishlist\" title=\"收藏\">收藏</a>\n" +
-                            "\n" +
-                            "                <a href=\"compare.html\" class=\"add-to-compare-link\" title=\"比较\">比较</a>\n" +
                             "            </div>\n" +
                             "        </div>\n" +
                             "    </div><!-- /.product-inner -->\n" +
@@ -437,7 +436,8 @@ $(document).on('click',".mid-link",function(){
                         "\t\t\t\t\t\t\t\t\t\t\t\t\t<ins><span class=\"amount\">"+list[lea].productPrice.formatMoney(2,"￥","",".")+"</span></ins>\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t\t</span>\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t</span>\n" +
-                        "\t\t\t\t\t\t\t\t\t\t\t<a rel=\"nofollow\" href=\"single-product.html\" class=\"button add_to_cart_button\">添加到购物车</a>\n" +
+                        "\t\t\t\t\t\t\t\t\t\t\t<a rel=\"nofollow\" href=\"javascript:void(0);\" class=\"button add_to_cart_button\">添加到购物车</a>\n" +
+                            "<input type='hidden' class='pid' value='"+list[lea].id+"'>"+
                         "\t\t\t\t\t\t\t\t\t\t</div><!-- /.price-add-to-cart -->\n" +
                         "\n" +
                         "\t\t\t\t\t\t\t\t\t\t<div class=\"hover-area\">\n" +
@@ -445,8 +445,6 @@ $(document).on('click',".mid-link",function(){
                         "\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t\t<a href=\"#\" rel=\"nofollow\" class=\"add_to_wishlist\">\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t\t\t收藏</a>\n" +
-                        "\n" +
-                        "\t\t\t\t\t\t\t\t\t\t\t\t\t<a href=\"#\" class=\"add-to-compare-link\">比较</a>\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t\t</div>\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t</div>\n" +
                         "\t\t\t\t\t\t\t\t\t\t</div><!-- /.product-inner -->\n" +
@@ -475,18 +473,17 @@ $(document).on('click',".mid-link",function(){
                             "            <span class=\"price\">\n" +
                             "                <span class=\"electro-price\">\n" +
                             "                    <ins><span class=\"amount\"> "+list[topi].productPrice.formatMoney(2,"￥","",".")+"</span></ins>\n" +
-                            "                                        <span class=\"amount\"> </span>\n" +
+                            "                     <span class=\"amount\"> </span>\n" +
                             "                </span>\n" +
                             "            </span>\n" +
-                            "\t\t\t\t\t\t\t<a rel=\"nofollow\" href=\"single-product.html\" title=\"添加到购物车\" class=\"button add_to_cart_button\">添加到购物车</a>\n" +
+                            "\t\t\t\t\t\t\t<a rel=\"nofollow\" href=\"javascript:void(0);\" title=\"添加到购物车\" class=\"button add_to_cart_button\">添加到购物车</a>\n" +
+                            "<input type='hidden' class='pid' value='"+list[topi].id+"'>"+
                             "\t\t\t\t\t\t</div><!-- /.price-add-to-cart -->\n" +
                             "\n" +
                             "\t\t\t\t\t\t<div class=\"hover-area\">\n" +
                             "\t\t\t\t\t\t\t<div class=\"action-buttons\">\n" +
                             "\n" +
                             "\t\t\t\t\t\t\t\t<a href=\"#\" rel=\"nofollow\" class=\"add_to_wishlist\" title=\"收藏\">收藏</a>\n" +
-                            "\n" +
-                            "\t\t\t\t\t\t\t\t<a href=\"compare.html\" class=\"add-to-compare-link\" title=\"比较\">比较</a>\n" +
                             "\t\t\t\t\t\t\t</div>\n" +
                             "\t\t\t\t\t\t</div>\n" +
                             "\t\t\t\t\t</div><!-- /.product-inner -->\n" +
@@ -540,6 +537,64 @@ $(document).on('click',".mid-link",function(){
         });
     }
 
+//点击图标加入购物车事件
+$(document).on('click',".add_to_cart_button",function(){
+    var pid=$(this).siblings(".pid").val();
+    var cartObj=[];
+    if (localStorage.getItem("eh_token") == null){
+        var  cookieCart=getCookie("cart");
+        if(cookieCart != null){
+            cartObj=cookieCart;
+        }else {
+            cartObj=JSON.stringify(cartObj);
+        }
+    }else {
+        cartObj=JSON.stringify(cartObj);
+    }
+
+    $.ajax({
+        type: "post",
+        url: serverURL+"/shoppingCart/addShoppingCart",
+        data:{"token":localStorage.getItem("eh_token"),"pid":pid,"pNumber":1,"ds":cartObj},
+        dataType:"json",
+        success: function(data){
+            if (data.errorCode == "501"){
+                layer.msg(data.message);
+                window.location.href="login.html";
+            }
+            if (data.errorCode == "200"){
+
+                if (data.message == "商品库存不足"){
+                    layer.msg("您已经添加过啦~");
+                }else {
+                    layer.msg(data.message);
+                }
+                var c=data.list;
+                if (c != null){
+                    var cartObj=[];
+                    $.each(c, function(index,cart) {
+                        var lsObj={"pid":cart.product.id,"pNumber":cart.number};
+                        cartObj.push(lsObj);
+                    });
+                    var str = JSON.stringify(cartObj);
+                    if( str.length > 0){
+                        setCookie("cart",str,30);
+                    }
+                }
+            }
+            if (data.errorCode == "500"){
+                if (data.message == "商品库存不足"){
+                    layer.msg("您已经添加过啦~");
+                }else {
+                    layer.msg(data.message);
+                }
+            }
+        }
+    });
+
+    return false;
+});
+
 // 用prototype对Number进行扩展 //参数：保留几位小数，货币符号，千位分隔符，小数分隔符
 Number.prototype.formatMoney = function (places, symbol, thousand, decimal) {
     places = !isNaN(places = Math.abs(places)) ? places : 2;
@@ -568,4 +623,29 @@ function formatDate(now) {
     var minute=now.getMinutes();
     var second=now.getSeconds();
     return "20"+(year-100)+"-"+month+"-"+date+" "+hour+":"+minute+":"+second;
+}
+
+//创建cookie(名称、值、过期天数)
+function setCookie(c_name,value,expiredays)
+{
+    var exdate=new Date()
+    exdate.setDate(exdate.getDate()+expiredays)
+    document.cookie=c_name+ "="+value+
+        ((expiredays==null) ? "" : ";expires="+exdate.toGMTString())
+}
+//获取cookie
+function getCookie(c_name)
+{
+    if (document.cookie.length>0)
+    {
+        c_start=document.cookie.indexOf(c_name + "=")
+        if (c_start!=-1)
+        {
+            c_start=c_start + c_name.length+1
+            c_end=document.cookie.indexOf(";",c_start)
+            if (c_end==-1) c_end=document.cookie.length
+            return unescape(document.cookie.substring(c_start,c_end))
+        }
+    }
+    return null;
 }

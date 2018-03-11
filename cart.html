@@ -68,7 +68,7 @@
 					<header class="entry-header"><h1 itemprop="name" class="entry-title">购物车</h1></header>
 
 
-    <table class="shop_table shop_table_responsive cart">
+    <table class="shop_table shop_table_responsive cart" id="table-cart">
         <thead>
             <tr>
                 <th class="product-remove">&nbsp;</th>
@@ -84,8 +84,7 @@
         </tbody>
     </table>
 
-
-				</article>
+                   </article>
 			</main><!-- #main -->
 		</div><!-- #primary -->
 	</div><!-- .container -->
@@ -207,9 +206,10 @@
     </div>
 
     <script type="text/javascript" src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/eh_home.js"></script>
-    <script src="assets/js/layer/2.4/layer.js"></script>
-    <script src="assets/js/Var.js"></script>
+    <script type="text/javascript" src="assets/js/Var.js"></script>
+    <script type="text/javascript" src="assets/js/eh_home.js"></script>
+    <script type="text/javascript" src="assets/js/layer/2.4/layer.js"></script>
+
 
            <script>
            (function($) {
@@ -287,87 +287,95 @@
                    success: function(data){
                         if (data.errorCode == "200"){
                             var cartBox="",jsBox,totalOf=0;
-                           $.each(data.list,function (index,c) {
-                               totalOf+=c.product.productPrice*c.number;
-                               var price=c.product.productPrice;
-                               price=price.formatMoney(2,"￥","",".");
-                               var totalPrice=c.product.productPrice*c.number;
-                               totalPrice=totalPrice.formatMoney(2,"￥","",".");
-                               var degree=c.product.degree;
-                               if (degree == 9){
-                                   degree=degree+" 成新";
-                               }else {
-                                   degree=degree+" 新";
-                               }
-                                cartBox+="<tr class=\"cart_item\">\n" +
-                                    "\n" +
-                                    "                <td class=\"product-remove\">\n" +
-                                    "                    <a class=\"remove\" href=\"javascript:void(0);\">×</a>\n" +
-                                    "                </td>\n" +
-                                    "\n" +
-                                    "                <td class=\"product-thumbnail\">\n" +
-                                    "                    <a href=\"single-product.html\"><img width=\"180\" height=\"180\" src=\"assets/images/products/2.jpg\" alt=\"\"></a>\n" +
-                                    "                </td>\n" +
-                                    "\n" +
-                                    "                <td data-title=\"Product\" class=\"product-name\">\n" +
-                                    "                    <a href=\"single-product.html?pid="+c.product.id+"&target=shoppingCart&pageType=cart\" target='_blank' style='display: block;'>"+c.product.productName+"</a>\n" +
-                                        "<span style='display: block;padding-top: 10px;font-size: 12px;color: #818a91;'>"+degree+"</span>"+
-                                    "<span style='display: block;padding-top: 5px;font-size: 12px;color: #818a91;'>在售数量: <span class='seeNumber'>"+c.product.productNumber+"</span></span>"+
-                                    "                </td>\n" +
-                                    "\n" +
-                                    "                <td data-title=\"Price\" class=\"product-price\">\n" +
-                                    "                    <span class=\"amount\">"+price+"</span>\n" +
-                                    "                </td>\n" +
-                                    "\n" +
-                                    "                <td data-title=\"Quantity\" class=\"product-quantity\">\n" +
-                                    "                    <div class=\"quantity buttons_added\">\n" +
-                                    "                        <input type=\"button\" class=\"minus\" value=\"-\">\n" +
-                                    "                        <label>数量:</label>\n" +
-                                    "                        <input type=\"number\"  class=\"input-text qty text pNumber\" readonly=\"readonly\" name=\"pNumber\" title=\"数量\" value=\""+c.number+"\"  min=\"1\">\n" +
-                                        "<input type='hidden' name='pid' class='pid' value='"+c.id+"'>"+
-                                    "                        <input type=\"button\" class=\"plus\" value=\"+\">\n" +
-                                    "                    </div>\n" +
-                                    "                </td>\n" +
-                                    "\n" +
-                                    "                <td data-title=\"Total\" class=\"product-subtotal\" style='width: 229px;'>\n" +
-                                    "                    <span class=\"amount\">"+totalPrice+"</span>\n" +
-                                    "                </td>\n" +
-                                    "            </tr>";
-                           }) ;
 
-                           jsBox="<div class=\"cart-collaterals\" style=\"padding-top: 3em;\">\n" +
-                               "\n" +
-                               "    <div class=\"cart_totals \">\n" +
-                               "\n" +
-                               "        <h2>购物车总计</h2>\n" +
-                               "\n" +
-                               "        <table class=\"shop_table shop_table_responsive\">\n" +
-                               "\n" +
-                               "            <tbody>\n" +
-                               "                <tr class=\"cart-subtotal\">\n" +
-                               "                    <th>小计</th>\n" +
-                               "                    <td data-title=\"Subtotal\"><span class=\"amount\">"+totalOf.formatMoney(2,"￥","",".")+"</span></td>\n" +
-                               "                </tr>\n" +
-                               "\n" +
-                               "\n" +
-                               "                <tr class=\"shipping\">\n" +
-                               "                    <th>其他费用</th>\n" +
-                               "                    <td data-title=\"Shipping\"><span class='amount'>￥0.00</span></td>\n" +
-                               "                </tr>\n" +
-                               "\n" +
-                               "                <tr class=\"order-total\">\n" +
-                               "                    <th>总计</th>\n" +
-                               "                    <td data-title=\"Total\"><strong><span class=\"amount\" style=\"color: orangered;font-size:18px;\" >"+totalOf.formatMoney(2,"￥","",".")+"</span></strong> </td>\n" +
-                               "                </tr>\n" +
-                               "            </tbody>\n" +
-                               "        </table>\n" +
-                               "<button name='addOrder' type='button' style='float: right;'>结算</button>"+
-                               "    </div>\n" +
-                               "</div>";
+                            if (data.list.length >0){
+                               $.each(data.list,function (index,c) {
+                                   totalOf+=c.product.productPrice*c.number;
+                                   var price=c.product.productPrice;
+                                   price=price.formatMoney(2,"￥","",".");
+                                   var totalPrice=c.product.productPrice*c.number;
+                                   totalPrice=totalPrice.formatMoney(2,"￥","",".");
+                                   var degree=c.product.degree;
+                                   if (degree == 9){
+                                       degree=degree+" 成新";
+                                   }else {
+                                       degree=degree+" 新";
+                                   }
+                                    cartBox+="<tr class=\"cart_item\">\n" +
+                                        "\n" +
+                                        "                <td class=\"product-remove\">\n" +
+                                        "                    <a class=\"remove\" href=\"javascript:void(0);\">×</a>\n" +
+                                        "                </td>\n" +
+                                        "\n" +
+                                        "                <td class=\"product-thumbnail\">\n" +
+                                        "                    <a href=\"single-product.html\"><img width=\"180\" height=\"180\" src=\"assets/images/products/2.jpg\" alt=\"\"></a>\n" +
+                                        "                </td>\n" +
+                                        "\n" +
+                                        "                <td data-title=\"Product\" class=\"product-name\">\n" +
+                                        "                    <a href=\"single-product.html?pid="+c.product.id+"&target=shoppingCart&pageType=cart\" target='_blank' style='display: block;'>"+c.product.productName+"</a>\n" +
+                                            "<span style='display: block;padding-top: 10px;font-size: 12px;color: #818a91;'>"+degree+"</span>"+
+                                        "<span style='display: block;padding-top: 5px;font-size: 12px;color: #818a91;'>在售数量: <span class='seeNumber'>"+c.product.productNumber+"</span></span>"+
+                                        "                </td>\n" +
+                                        "\n" +
+                                        "                <td data-title=\"Price\" class=\"product-price\">\n" +
+                                        "                    <span class=\"amount\">"+price+"</span>\n" +
+                                        "                </td>\n" +
+                                        "\n" +
+                                        "                <td data-title=\"Quantity\" class=\"product-quantity\">\n" +
+                                        "                    <div class=\"quantity buttons_added\">\n" +
+                                        "                        <input type=\"button\" class=\"minus\" value=\"-\">\n" +
+                                        "                        <label>数量:</label>\n" +
+                                        "                        <input type=\"number\"  class=\"input-text qty text pNumber\" readonly=\"readonly\" name=\"pNumber\" title=\"数量\" value=\""+c.number+"\"  min=\"1\">\n" +
+                                            "<input type='hidden' name='pid' class='pid' value='"+c.id+"'>"+
+                                        "                        <input type=\"button\" class=\"plus\" value=\"+\">\n" +
+                                        "                    </div>\n" +
+                                        "                </td>\n" +
+                                        "\n" +
+                                        "                <td data-title=\"Total\" class=\"product-subtotal\" style='width: 229px;'>\n" +
+                                        "                    <span class=\"amount\">"+totalPrice+"</span>\n" +
+                                        "                </td>\n" +
+                                        "            </tr>";
+                               }) ;
 
-                            $("#cartList").append(cartBox);
-                            $("#cartBox").append(jsBox);
+                               jsBox="<div class=\"cart-collaterals\" id='cart-jiesuan' style=\"padding-top: 3em;\">\n" +
+                                   "\n" +
+                                   "    <div class=\"cart_totals \">\n" +
+                                   "\n" +
+                                   "        <h2>购物车总计</h2>\n" +
+                                   "\n" +
+                                   "        <table class=\"shop_table shop_table_responsive\">\n" +
+                                   "\n" +
+                                   "            <tbody>\n" +
+                                   "                <tr class=\"cart-subtotal\">\n" +
+                                   "                    <th>小计</th>\n" +
+                                   "                    <td data-title=\"Subtotal\"><span class=\"amount\">"+totalOf.formatMoney(2,"￥","",".")+"</span></td>\n" +
+                                   "                </tr>\n" +
+                                   "\n" +
+                                   "\n" +
+                                   "                <tr class=\"shipping\">\n" +
+                                   "                    <th>其他费用</th>\n" +
+                                   "                    <td data-title=\"Shipping\"><span class='amount'>￥0.00</span></td>\n" +
+                                   "                </tr>\n" +
+                                   "\n" +
+                                   "                <tr class=\"order-total\">\n" +
+                                   "                    <th>总计</th>\n" +
+                                   "                    <td data-title=\"Total\"><strong><span class=\"amount\" style=\"color: orangered;font-size:18px;\" >"+totalOf.formatMoney(2,"￥","",".")+"</span></strong> </td>\n" +
+                                   "                </tr>\n" +
+                                   "            </tbody>\n" +
+                                   "        </table>\n" +
+                                   "<button name='addOrder' type='button' class='subOrderBtn' style='float: right;'>结算</button>"+
+                                   "    </div>\n" +
+                                   "</div>";
 
+                                $("#cartList").append(cartBox);
+                                $("#cartBox").append(jsBox);
+                            }else {
+                                $("#table-cart").remove();
+                                $("#cartBox").append(" <div style=\"width: 720px;margin: 0px auto;margin-top: 70px;\">\n" +
+                                    "                <img src=\"assets/images/null.png\" height=\"444\" width=\"720\"/>\n" +
+                                    "                <p style=\"font-size: 30px;display: block; margin-top: 70px;text-align: center;\">您的购物车还是空的，赶紧行动吧！</p>\n" +
+                                    "            </div>");
+                            }
                         }
                    }
 
@@ -418,6 +426,7 @@
                   })
                }
 
+
                //删除商品
                function delCratProduct(cartId,e) {
                    $.ajax({
@@ -428,11 +437,21 @@
                        success:function (data) {
                            if (data.errorCode == "200"){
                                layer.msg(data.message);
-                                $(e).parents(".cart_item").remove();
-                               var qt=$(".shipping").find(".amount").text();
-                               qt=parseFloat(qt.slice(qt.indexOf("￥")+1));
-                               $(".cart-subtotal").find(".amount").text(data.item.subtotal.formatMoney(2,"￥","","."));
-                               $(".order-total").find(".amount").text((data.item.subtotal+qt).formatMoney(2,"￥","","."));
+                               $(e).parents(".cart_item").remove();
+                               if(data.item.cartListSize > 0){
+                                   var qt=$(".shipping").find(".amount").text();
+                                   qt=parseFloat(qt.slice(qt.indexOf("￥")+1));
+                                   $(".cart-subtotal").find(".amount").text(data.item.subtotal.formatMoney(2,"￥","","."));
+                                   $(".order-total").find(".amount").text((data.item.subtotal+qt).formatMoney(2,"￥","","."));
+                               }else {
+                                   $("#table-cart").remove();
+                                   $("#cart-jiesuan").remove();
+                                   $("#cartBox").append(" <div style=\"width: 720px;margin: 0px auto;margin-top: 70px;\">\n" +
+                                       "                <img src=\"assets/images/null.png\" height=\"444\" width=\"720\"/>\n" +
+                                       "                <p style=\"font-size: 30px;display: block; margin-top: 70px;text-align: center;\">您的购物车还是空的，赶紧行动吧！</p>\n" +
+                                       "            </div>");
+                               }
+
                            }
                            if (data.errorCode == "500"){
                                layer.msg(data.message);
@@ -440,6 +459,47 @@
                        }
                    });
                }
+
+               //结算
+               $(document).on('click',".subOrderBtn",function(){
+                   $.ajax({
+                       type: "GET",
+                       url: serverURL + "/shoppingCart/cartList",
+                       data: {"token": localStorage.getItem("eh_token")},
+                       dataType: "json",
+                       success: function (data) {
+                           if (data.errorCode == "200") {
+                               var key=compileStr("success");
+                               layer.msg("结算成功,正在跳转到订单页...",{
+                                   time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                               },function () {
+                                   window.location.href="generateOrder.html?pKey="+key;
+                               });
+
+                           }
+                           if (data.errorCode == "501") {
+                               layer.msg(data.message);
+                               localStorage.removeItem("eh_token");
+                           }
+                       },
+                       error:function () {
+                           layer.msg("哎呀,出错了...");
+                       }
+                   });
+
+                   return false;
+               });
+
+               //对字符串进行加密
+               function compileStr(code){
+                   var c=String.fromCharCode(code.charCodeAt(0)+code.length);
+                   for(var i=1;i<code.length;i++)
+                   {
+                       c+=String.fromCharCode(code.charCodeAt(i)+code.charCodeAt(i-1));
+                   }
+                   return escape(c);
+               }
+
            });
         </script>
     </body>

@@ -464,7 +464,7 @@
         <script type="text/javascript" src="assets/js/eh_home.js"></script>
         <script type="text/javascript" src="assets/js/layer/2.4/layer.js"></script>
         <script type="text/javascript" src="assets/js/eh_product.js"></script>
-    <script src="assets/js/Var.js"></script>
+         <script src="assets/js/Var.js"></script>
 
 
     <script>
@@ -541,7 +541,7 @@
                    return (typeof x === 'number') && (x % 1 === 0);
                }
 
-               //获取url中的参数
+                //获取url中的参数
                function getUrlParam(name){
                    //构造一个含有目标参数的正则表达式对象
                    var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
@@ -630,7 +630,7 @@
                                        cartObj.push(lsObj);
                                    });
                                    var str = JSON.stringify(cartObj);
-                                   if( str.length > 2){
+                                   if( str.length > 0){
                                        setCookie("cart",str,30);
                                    }
                                }

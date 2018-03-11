@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" href="assets/js/layui/css/layui.css"  media="all">
     <script type="text/javascript" src="assets/js/jquery.min.js"></script>
     <script>
 
@@ -10,25 +11,82 @@
 
 
 
-       });
-       var focus=0;
-       // 网页得到焦点
-       window.onfocus = function(){
-           focus+=1;
-           if (focus == 2 ){
-               alert("得到焦点");
-           }
 
-       }
-       // 网页失去焦点
-       window.onblur = function(){
-           if (focus == 2){
-               focus=0;
-           }
-       }
+       });
+       // var focus=0;
+       // // 网页得到焦点
+       // window.onfocus = function(){
+       //     focus+=1;
+       //     if (focus == 2 ){
+       //         alert("得到焦点");
+       //     }
+       //
+       // }
+       // // 网页失去焦点
+       // window.onblur = function(){
+       //     if (focus == 2){
+       //         focus=0;
+       //     }
+       // }
+       //对字符串进行加密
+
+
+
     </script>
+
 </head>
 <body>
 
+<ul class="layui-nav layui-nav-tree layui-bg-cyan layui-inline" lay-filter="demo" style="width: 650px;position: absolute;top: 100px;">
+    <li class="layui-nav-item">
+        <a href="javascript:;">合并 | 2笔订单</a>
+        <dl class="layui-nav-child">
+            <!--<dd><a href="javascript:;">订单号:20180311145812529405</a></dd>-->
+            <!--<dd><a href="javascript:;">选项二</a></dd>-->
+            <!--<dd><a href="javascript:;">选项三</a></dd>-->
+            <table width="650" style="text-align: center">
+                <tr>
+                    <td>名称</td>
+                    <td>订单号</td>
+                    <td>卖家</td>
+                    <td>金额</td>
+                </tr>
+                <tr>
+                    <td>阿迪达斯 海洋之心</td>
+                    <td>20180311145812529405</td>
+                    <td>zhoufeiting</td>
+                    <td>￥1279.00</td>
+                </tr>
+                <tr>
+                    <td>阿迪达斯 海洋之心</td>
+                    <td>20180311145812529405</td>
+                    <td>zhoufeiting</td>
+                    <td>￥1279.00</td>
+                </tr>
+                <tr>
+                    <td>阿迪达斯 海洋之心</td>
+                    <td>20180311145812529405</td>
+                    <td>zhoufeiting</td>
+                    <td>￥1279.00</td>
+                </tr>
+            </table>
+        </dl>
+    </li>
+
+</ul>
+<div style="background-color: red;border: 1px solid red;width: 100%;position: relative;"></div>
+
 </body>
+<script src="assets/js/layui/layui.js" charset="utf-8"></script>
+<script>
+    layui.use('element', function(){
+        var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+        //监听导航点击
+        element.on('nav(demo)', function(elem){
+            //console.log(elem)
+            layer.msg(elem.text());
+        });
+    });
+</script>
 </html>
