@@ -34,34 +34,18 @@
         table th {
             text-align: center;
         }
-    
-            .aliPay:hover{
-                background-color: #00aaee;
+        button{
+            border-radius: 8px;
+        }
+        .index{
+            background-color: #e21836;
+            color: white;
+            margin-right: 25px;
+        }
+        .index:hover{
+                background-color:black ;
             }
-            .wePay:hover{
-                background-color: #00c800;
-            }
-            .e-currencyPay:hover{
-                background-color: #e21836;
-            }
-            .orderItem{
-                text-align: center;
-                margin-bottom: 15px;
-            }
-            .orderItem tr td{
-                font-size: 12px;
-            }
-            .orderItem tr:hover:not(:first-child){
-                background-color: #4e5465;
 
-            }
-            .orderItem-ul{
-                width: 650px;
-                position: absolute;
-                left: 20px;
-                top: 20px;
-                z-index: 2;
-            }
         </style>
     </head>
 
@@ -99,23 +83,7 @@
 		<div id="primary" class="content-area">
 			<main id="main" class="site-main">
 				<article class="page type-page status-publish hentry" id="cartBox">
-					<header class="entry-header"><h1 itemprop="name" class="entry-title">支付订单</h1></header>
 
-
-    <table class="shop_table shop_table_responsive cart" style="text-align: center;">
-        <thead>
-            <tr>
-                <th class="product-name">交易详情</th>
-                <th class="product-price">交易时间</th>
-                <th class="product-quantity">交易总额</th>
-                <th class="product-subtotal">操作</th>
-            </tr>
-        </thead>
-        <tbody id="cartList">
-
-
-        </tbody>
-    </table>
 
 				</article>
 			</main><!-- #main -->
@@ -124,7 +92,7 @@
 </div><!-- #content -->
             </header>
 
-                <footer id="colophon" class="site-footer"  style="margin-top: 50px;">
+                <footer id="colophon" class="site-footer"   >
                     <div class="footer-bottom-widgets">
                         <div class="container">
                             <div class="row">
@@ -246,181 +214,34 @@
            <script>
 
 
-
-
-           (function($) {
-
-               $('.minus').click(function () {
-                   var num=Number($(this).siblings(".qty").val())-1;
-                   if (num >= 0){
-                       $(this).siblings('.qty').val(num);
-                   }else {
-                       $(this).siblings('.qty').val(0);
-                   }
-               });
-
-
-               $('.plus').click(function () {
-                   var num=Number($(this).siblings(".qty").val())+1;
-                   if (num >= 0){
-                       $(this).siblings('.qty').val(num);
-                   }else {
-                       $(this).siblings('.qty').val(0);
-                   }
-               });
-            })(jQuery);
-
            $(function () {
                getheaderMessage();
 
-
-               var key=getUrlParam("payKey");
+               var key=getUrlParam('payKey'),totalPrice=getUrlParam('tp');
                key=uncompileStr(key);
+               totalPrice=parseInt(uncompileStr(totalPrice));
 
-               if (key == "successDoPay"){
-
-                   //获取cookie中orderItem
-                   var orderObj=[];
-                   var jObj=getCookie('orderItem');
-
-                   if (jObj != null){
-                       jObj=uncompileStr(jObj);//对cooike中的字符串进行解密
-                       orderObj=jObj;
-                       orderObj=JSON.parse(orderObj);
-                   }else {
-                       orderObj=JSON.stringify(orderObj);
-                       orderObj=JSON.parse(orderObj);
-                   }
-
-                   //cookie中存在对象
-                   if (orderObj.length >0){
-                       orderObj=JSON.stringify(orderObj);
-                       $.ajax({
-                           type: "POST",
-                           url: serverURL + "/order/payOrder",
-                           data: {"token": localStorage.getItem("eh_token"),"ds":orderObj},
-                           dataType: "json",
-                           success: function (data) {
-                               if (data.errorCode == "200"){
-                                   var cartList=data.list;
-                                   if(cartList.length >0){
-                                       var orderBox="",orderSize=cartList.length,mergeText="";
-                                       if (orderSize >1){
-                                           mergeText="合并 | "+orderSize+"笔订单";
-                                       }else {
-                                           mergeText=" 1笔订单";
-                                       }
-                                       $.each(cartList,function (index,c) {
-                                           orderBox+= " <tr>\n" +
-                                               "     <td>"+c.product.productName+"</td>\n" +
-                                               "  <td>"+c.orderCode+"</td>\n" +
-                                               "  <td>"+c.sellUser.userName+"</td>\n" +
-                                               " <td>"+c.orderPrice.formatMoney(2,'￥','','.')+"</td>\n" +
-                                               "  </tr>\n";
-                                       });
-
-
-                                       $("#cartList").append(
-                                           "        <tr style=\" background-color: #fbfcff;height: 60px;font-size: 12px;\">\n" +
-                                           "            <td width=\"400\">"+orderSize+"笔订单</td>\n" +
-                                           "            <td>"+getLocalTime(data.item.orderTime)+"</td>\n" +
-                                           "            <td style=\"color: orangered;font-size: 18px;font-weight: bold;\">"+data.item.totalPrice.formatMoney(2,'￥','','.')+"</td>\n" +
-                                           "            <td width=\"300\">\n" +
-                                           "                您可以选择以下付款方式:\n" +
-                                           "            </td>\n" +
-                                           "        </tr>\n" +
-                                           "        <tr style=\" background-color: #f2f7ff;height: 90px;\">\n" +
-                                           "            <td colspan=\"2\" style=\"position: relative;\">\n" +
-                                           "                <ul class=\"layui-nav layui-nav-tree layui-bg-cyan layui-inline orderItem-ul\" lay-filter=\"item\">\n" +
-                                           "                    <li class=\"layui-nav-item\">\n" +
-                                           "                        <a href=\"javascript:void(0);\">"+mergeText+"<span class=\"layui-nav-more\"></span></a>\n" +
-                                           "                        <dl class=\"layui-nav-child\">\n" +
-                                           "                            <table width=\"650\" class=\"orderItem\">\n" +
-                                           "                                <tbody><tr>\n" +
-                                           "                                    <td>名称</td>\n" +
-                                           "                                    <td>订单号</td>\n" +
-                                           "                                    <td>卖家</td>\n" +
-                                           "                                    <td>金额</td>\n" +
-                                           "                                </tr>\n" +
-                                           orderBox+
-                                           "                            </tbody></table>\n" +
-                                           "                        </dl>\n" +
-                                           "                    </li>\n" +
-                                           "                <span class=\"layui-nav-bar\" style=\"top: 22.5px; height: 0px; opacity: 0;\"></span></ul>\n" +
-                                           "            </td>\n" +
-                                           "            <td colspan=\"2\" style=\"text-align: right;\">\n" +
-                                           "                <button class=\"aliPay pay\" value=\"aliPay\" title=\"支付宝支付\">支付宝</button>\n" +
-                                           "                <button class=\"wePay pay\" value=\"wePay\" title=\"微信支付\">微信</button>\n" +
-                                           "                <button class=\"e-currencyPay pay\" value=\"e-currencyPay\" title=\"快捷/网银支付\">快捷/网银</button>\n" +
-                                           "                <button class=\"otherPay pay\" value=\"otherPay\" title=\"其他付款方式支付\">其他付款方式</button>\n" +
-                                           "            </td>\n" +
-                                           "\n" +
-                                           "        </tr>");
-                                       init();
-                                   }
-                               }
-                           }
-                       });
-
-                   }
-
-
+               if (key == "okPay"){
+                   $('#cartBox').append(
+                       "                    <div style=\"margin-top: 34px;\"><img src=\"assets/images/pay/okPay.png\" style=\"margin: 0 auto;\"></div>\n" +
+                       "                    <header class=\"entry-header\" style=\"margin: 25px 0px;\"><h3 itemprop=\"name\" class=\"entry-title\">支付成功</h3></header>\n" +
+                       "                    <div style=\"text-align: center;margin: 15px 0px;\"><p><span>订单号&nbsp;:&nbsp;</span><span>"+randomNum(23)+"</span>&nbsp;&nbsp;|&nbsp;&nbsp;<span>支付时间&nbsp;:&nbsp;</span><span>"+dateFtt("yyyy-MM-dd hh:mm:ss",new Date())+"</span> &nbsp;&nbsp;|&nbsp;&nbsp;<span>支付金额&nbsp;:&nbsp;</span><span style=\"color: orangered;font-weight: bold;\">"+totalPrice.formatMoney(2,'￥','','.')+"</span></p></div>\n" +
+                       "                    <div style=\"text-align: center;margin-top: 35px;\"><button value=\"index\" class=\"index\">继续购物</button><button value=\"seleceOrder\" class='selectOrder'>查看订单</button></div>\n");
                }
 
-            $(document).on('click','.pay',function () {
+               $(document).on('click','.index',function () {
+                   window.location.href='index.html';
+               });
 
-                //获取cookie中orderItem
-                var orderObj=[];
-                var jObj=getCookie('orderItem');
+               $(document).on('click','.selectOrder',function () {
+                   window.location.href='myOrder.html';
+               });
 
-                if (jObj != null){
-                    jObj=uncompileStr(jObj);//对cooike中的字符串进行解密
-                    orderObj=jObj;
-                    orderObj=JSON.parse(orderObj);
-                }else {
-                    orderObj=JSON.stringify(orderObj);
-                    orderObj=JSON.parse(orderObj);
-                }
-
-                //cookie中存在对象
-                if (orderObj.length >0){
-                    orderObj=JSON.stringify(orderObj);
-                    $.ajax({
-                        type: "POST",
-                        url: serverURL + "/order/pay",
-                        data: {"token": localStorage.getItem("eh_token"),"ds":orderObj},
-                        dataType: "json",
-                        success: function (data) {
-                            if(data.errorCode == "200"){
-                                delCookie('orderItem');
-                                layer.msg("支付成功",{
-                                    time: 1000 //2秒关闭（如果不配置，默认是3秒）
-                                },function(){
-                                    var key=compileStr("okPay");
-                                    window.location.href="okPay.html?payKey="+key+"&tp="+compileStr(data.item.total.toString());
-                                });
-                            }
-                            if(data.errorCode == "505"){
-                             layer.msg(data.message);
-                            }
-                            if(data.errorCode == "500"){
-                                layer.msg(data.message);
-                            }
-                        },
-                        error:function () {
-                            layer.msg('抱歉,出了点问题，我们正在努力修复中...');
-                        }
-
-                    });
-                }
+               });
 
 
-            });
-
-           });
 
 
-           //获取url中的参数
            function getUrlParam(name){
                //构造一个含有目标参数的正则表达式对象
                var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
@@ -440,31 +261,35 @@
                }
                return c;
            }
-
-           //对字符串进行加密
-           function compileStr(code){
-               var c=String.fromCharCode(code.charCodeAt(0)+code.length);
-               for(var i=1;i<code.length;i++)
-               {
-                   c+=String.fromCharCode(code.charCodeAt(i)+code.charCodeAt(i-1));
+           //生成指定位随机数
+           function randomNum(n){
+               var t='';
+               for(var i=0;i<n;i++){
+                   t+=Math.floor(Math.random()*10);
                }
-               return escape(c);
+               return t;
            }
 
-           function init() {
-               layui.use('element', function(){
-                   var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
-
-                   //监听导航点击
-                   element.on('nav(item)', function(elem){
-                       //console.log(elem)
-
-                   });
-
-                   // element.init();
-               });
-
+           /**************************************时间格式化处理************************************/
+           function dateFtt(fmt,date)
+           {
+               var o = {
+                   "M+" : date.getMonth()+1,                 //月份
+                   "d+" : date.getDate(),                    //日
+                   "h+" : date.getHours(),                   //小时
+                   "m+" : date.getMinutes(),                 //分
+                   "s+" : date.getSeconds(),                 //秒
+                   "q+" : Math.floor((date.getMonth()+3)/3), //季度
+                   "S"  : date.getMilliseconds()             //毫秒
+               };
+               if(/(y+)/.test(fmt))
+                   fmt=fmt.replace(RegExp.$1, (date.getFullYear()+"").substr(4 - RegExp.$1.length));
+               for(var k in o)
+                   if(new RegExp("("+ k +")").test(fmt))
+                       fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+               return fmt;
            }
+
 
 
            </script>

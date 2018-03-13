@@ -1,4 +1,4 @@
-﻿﻿<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
     <head>
 
@@ -29,10 +29,11 @@
 
         <link rel="shortcut icon" href="assets/images/fav-icon.png">
         <link rel="stylesheet" href="assets/css/eh_home.css">
+        <script type="text/javascript"src="assets/js/Var.js"></script>
         <style>
             .buy-message{
                 width: 400px;
-                height: 30px;
+                height: 35px;
                 border-radius: 5px;
                 font-size: 12px;
                 color: #0C0C0C;!important;
@@ -240,9 +241,9 @@
     </div>
 
     <script type="text/javascript" src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/layer/2.4/layer.js"></script>
-    <script src="assets/js/Var.js"></script>
-    <script src="assets/js/eh_home.js"></script>
+    <script type="text/javascript" src="assets/js/layer/2.4/layer.js"></script>
+    <script type="text/javascript" src="assets/js/eh_home.js"></script>
+
            <script>
            (function($) {
 
@@ -381,11 +382,25 @@
                        dataType: "json",
                        success: function (data) {
                             if (data.errorCode == "200"){
+                                //先删除cookie中订单id
+                                delCookie('orderItem');
+                                //在存入cookie
+                                var orderObj=[];
+                                $.each(data.list,function (index,o) {
+                                    var lsObj={"oid":o.id,"oCode":o.orderCode};
+                                    orderObj.push(lsObj);
+                                });
+
+                                var str = JSON.stringify(orderObj);
+                                if( str.length > 0){
+                                    str=compileStr(str);//对存入cookie中的数据进行加密
+                                    setCookie("orderItem",str,'-1');
+                                }
                                 layer.msg("提交成功,正在跳到支付页面...",{
                                     time: 1000 //2秒关闭（如果不配置，默认是3秒）
                                 },function(){
                                     var key=compileStr("successDoPay");
-                                   window.location.href="ehPay.html?payKey="+key;
+                                    window.location.href="ehPay.html?payKey="+key;
                                 });
 
                            }
