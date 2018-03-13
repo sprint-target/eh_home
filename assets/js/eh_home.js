@@ -570,7 +570,7 @@ $(document).on('click',".add_to_cart_button",function(){
                     layer.msg(data.message);
                 }
                 var c=data.list;
-                if (c != null){
+                if (c.length > 0){
                     var cartObj=[];
                     $.each(c, function(index,cart) {
                         var lsObj={"pid":cart.product.id,"pNumber":cart.number};
@@ -648,4 +648,14 @@ function getCookie(c_name)
         }
     }
     return null;
+}
+
+//删除一个cookie
+function delCookie(name) {
+    var exp = new Date();
+    exp.setTime(exp.getTime() - 1);
+    // var cval=getCookie(name);
+    var cval='';
+    if(cval!=null)
+        document.cookie= name + "="+cval+";expires="+exp.toUTCString();
 }
