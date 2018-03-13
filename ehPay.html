@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html>
     <head>
 
@@ -246,6 +246,18 @@
            <script>
 
 
+                   layui.use('element', function(){
+                       var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
+
+                       //监听导航点击
+                       element.on('nav(item)', function(elem){
+                           //console.log(elem)
+
+                       });
+
+                       element.init();
+                   });
+
 
 
            (function($) {
@@ -278,195 +290,96 @@
                key=uncompileStr(key);
 
                if (key == "successDoPay"){
-
-                   //获取cookie中orderItem
-                   var orderObj=[];
-                   var jObj=getCookie('orderItem');
-
-                   if (jObj != null){
-                       jObj=uncompileStr(jObj);//对cooike中的字符串进行解密
-                       orderObj=jObj;
-                       orderObj=JSON.parse(orderObj);
-                   }else {
-                       orderObj=JSON.stringify(orderObj);
-                       orderObj=JSON.parse(orderObj);
-                   }
-
-                   //cookie中存在对象
-                   if (orderObj.length >0){
-                       orderObj=JSON.stringify(orderObj);
-                       $.ajax({
-                           type: "POST",
-                           url: serverURL + "/order/payOrder",
-                           data: {"token": localStorage.getItem("eh_token"),"ds":orderObj},
-                           dataType: "json",
-                           success: function (data) {
-                               if (data.errorCode == "200"){
-                                   var cartList=data.list;
-                                   if(cartList.length >0){
-                                       var orderBox="",orderSize=cartList.length,mergeText="";
-                                       if (orderSize >1){
-                                           mergeText="合并 | "+orderSize+"笔订单";
-                                       }else {
-                                           mergeText=" 1笔订单";
-                                       }
-                                       $.each(cartList,function (index,c) {
-                                           orderBox+= " <tr>\n" +
-                                               "     <td>"+c.product.productName+"</td>\n" +
-                                               "  <td>"+c.orderCode+"</td>\n" +
-                                               "  <td>"+c.sellUser.userName+"</td>\n" +
-                                               " <td>"+c.orderPrice.formatMoney(2,'￥','','.')+"</td>\n" +
-                                               "  </tr>\n";
-                                       });
+                   $.ajax({
+                       type: "POST",
+                       url: serverURL + "/order/payOrder",
+                       data: {"token": localStorage.getItem("eh_token")},
+                       dataType: "json",
+                       success: function (data) {
+                            if (data.errorCode == "200"){
+                                var cartList=data.list;
+                                if(cartList.length >0){
+                                    var orderBox="",orderSize=cartList.length,mergeText="";
+                                    if (orderSize >1){
+                                        mergeText="合并 | "+orderSize+"笔订单";
+                                    }else {
+                                        mergeText=" 1笔订单";
+                                    }
+                                    $.each(cartList,function (index,c) {
+                                        orderBox+= " <tr>\n" +
+                                            "     <td>"+c.product.productName+"</td>\n" +
+                                            "  <td>"+c.orderCode+"</td>\n" +
+                                            "  <td>"+c.sellUser.userName+"</td>\n" +
+                                            " <td>"+c.orderPrice.formatMoney(2,'￥','','.')+"</td>\n" +
+                                            "  </tr>\n";
+                                    });
 
 
-                                       $("#cartList").append(
-                                           "        <tr style=\" background-color: #fbfcff;height: 60px;font-size: 12px;\">\n" +
-                                           "            <td width=\"400\">"+orderSize+"笔订单</td>\n" +
-                                           "            <td>"+getLocalTime(data.item.orderTime)+"</td>\n" +
-                                           "            <td style=\"color: orangered;font-size: 18px;font-weight: bold;\">"+data.item.totalPrice.formatMoney(2,'￥','','.')+"</td>\n" +
-                                           "            <td width=\"300\">\n" +
-                                           "                您可以选择以下付款方式:\n" +
-                                           "            </td>\n" +
-                                           "        </tr>\n" +
-                                           "        <tr style=\" background-color: #f2f7ff;height: 90px;\">\n" +
-                                           "            <td colspan=\"2\" style=\"position: relative;\">\n" +
-                                           "                <ul class=\"layui-nav layui-nav-tree layui-bg-cyan layui-inline orderItem-ul\" lay-filter=\"item\">\n" +
-                                           "                    <li class=\"layui-nav-item\">\n" +
-                                           "                        <a href=\"javascript:void(0);\">"+mergeText+"<span class=\"layui-nav-more\"></span></a>\n" +
-                                           "                        <dl class=\"layui-nav-child\">\n" +
-                                           "                            <table width=\"650\" class=\"orderItem\">\n" +
-                                           "                                <tbody><tr>\n" +
-                                           "                                    <td>名称</td>\n" +
-                                           "                                    <td>订单号</td>\n" +
-                                           "                                    <td>卖家</td>\n" +
-                                           "                                    <td>金额</td>\n" +
-                                           "                                </tr>\n" +
-                                           orderBox+
-                                           "                            </tbody></table>\n" +
-                                           "                        </dl>\n" +
-                                           "                    </li>\n" +
-                                           "                <span class=\"layui-nav-bar\" style=\"top: 22.5px; height: 0px; opacity: 0;\"></span></ul>\n" +
-                                           "            </td>\n" +
-                                           "            <td colspan=\"2\" style=\"text-align: right;\">\n" +
-                                           "                <button class=\"aliPay pay\" value=\"aliPay\" title=\"支付宝支付\">支付宝</button>\n" +
-                                           "                <button class=\"wePay pay\" value=\"wePay\" title=\"微信支付\">微信</button>\n" +
-                                           "                <button class=\"e-currencyPay pay\" value=\"e-currencyPay\" title=\"快捷/网银支付\">快捷/网银</button>\n" +
-                                           "                <button class=\"otherPay pay\" value=\"otherPay\" title=\"其他付款方式支付\">其他付款方式</button>\n" +
-                                           "            </td>\n" +
-                                           "\n" +
-                                           "        </tr>");
-                                       init();
-                                   }
-                               }
-                           }
-                       });
+                                    $("#cartList").append(
+                                        "        <tr style=\" background-color: #fbfcff;height: 60px;font-size: 12px;\">\n" +
+                                        "            <td width=\"400\">"+orderSize+"笔订单</td>\n" +
+                                        "            <td>"+getLocalTime(data.item.orderTime)+"</td>\n" +
+                                        "            <td style=\"color: orangered;font-size: 18px;font-weight: bold;\">"+data.item.totalPrice.formatMoney(2,'￥','','.')+"</td>\n" +
+                                        "            <td width=\"300\">\n" +
+                                        "                您可以选择以下付款方式:\n" +
+                                        "            </td>\n" +
+                                        "        </tr>\n" +
+                                        "        <tr style=\" background-color: #f2f7ff;height: 90px;\">\n" +
+                                        "            <td colspan=\"2\" style=\"position: relative;\">\n" +
+                                        "                <ul class=\"layui-nav layui-nav-tree layui-bg-cyan layui-inline orderItem-ul\" lay-filter=\"item\">\n" +
+                                        "                    <li class=\"layui-nav-item\">\n" +
+                                        "                        <a href=\"javascript:;\">"+mergeText+"<span class=\"layui-nav-more\"></span></a>\n" +
+                                        "                        <dl class=\"layui-nav-child\">\n" +
+                                        "                            <table width=\"650\" class=\"orderItem\">\n" +
+                                        "                                <tbody><tr>\n" +
+                                        "                                    <td>名称</td>\n" +
+                                        "                                    <td>订单号</td>\n" +
+                                        "                                    <td>卖家</td>\n" +
+                                        "                                    <td>金额</td>\n" +
+                                        "                                </tr>\n" +
+                                        orderBox+
+                                        "                            </tbody></table>\n" +
+                                        "                        </dl>\n" +
+                                        "                    </li>\n" +
+                                        "                <span class=\"layui-nav-bar\" style=\"top: 22.5px; height: 0px; opacity: 0;\"></span></ul>\n" +
+                                        "            </td>\n" +
+                                        "            <td colspan=\"2\" style=\"text-align: right;\">\n" +
+                                        "                <button class=\"aliPay\" value=\"aliPay\" title=\"支付宝支付\">支付宝</button>\n" +
+                                        "                <button class=\"wePay\" value=\"wePay\" title=\"微信支付\">微信</button>\n" +
+                                        "                <button class=\"e-currencyPay\" value=\"e-currencyPay\" title=\"快捷/网银支付\">快捷/网银</button>\n" +
+                                        "                <button class=\"otherPay\" value=\"otherPay\" title=\"其他付款方式支付\">其他付款方式</button>\n" +
+                                        "            </td>\n" +
+                                        "\n" +
+                                        "        </tr>");
 
-                   }
-
-
-               }
-
-            $(document).on('click','.pay',function () {
-
-                //获取cookie中orderItem
-                var orderObj=[];
-                var jObj=getCookie('orderItem');
-
-                if (jObj != null){
-                    jObj=uncompileStr(jObj);//对cooike中的字符串进行解密
-                    orderObj=jObj;
-                    orderObj=JSON.parse(orderObj);
-                }else {
-                    orderObj=JSON.stringify(orderObj);
-                    orderObj=JSON.parse(orderObj);
-                }
-
-                //cookie中存在对象
-                if (orderObj.length >0){
-                    orderObj=JSON.stringify(orderObj);
-                    $.ajax({
-                        type: "POST",
-                        url: serverURL + "/order/pay",
-                        data: {"token": localStorage.getItem("eh_token"),"ds":orderObj},
-                        dataType: "json",
-                        success: function (data) {
-                            if(data.errorCode == "200"){
-                                delCookie('orderItem');
-                                layer.msg("支付成功",{
-                                    time: 1000 //2秒关闭（如果不配置，默认是3秒）
-                                },function(){
-                                    var key=compileStr("okPay");
-                                    window.location.href="okPay.html?payKey="+key+"&tp="+compileStr(data.item.total.toString());
-                                });
+                                }
                             }
-                            if(data.errorCode == "505"){
-                             layer.msg(data.message);
-                            }
-                            if(data.errorCode == "500"){
-                                layer.msg(data.message);
-                            }
-                        },
-                        error:function () {
-                            layer.msg('抱歉,出了点问题，我们正在努力修复中...');
-                        }
-
-                    });
-                }
-
-
-            });
-
-           });
-
-
-           //获取url中的参数
-           function getUrlParam(name){
-               //构造一个含有目标参数的正则表达式对象
-               var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-               //匹配目标参数
-               var r = window.location.search.substr(1).match(reg);
-               //返回参数值
-               if (r!=null) return unescape(r[2]);
-               return null;
-           }
-           //对字符串进行解密
-           function uncompileStr(code){
-               code=unescape(code);
-               var c=String.fromCharCode(code.charCodeAt(0)-code.length);
-               for(var i=1;i<code.length;i++)
-               {
-                   c+=String.fromCharCode(code.charCodeAt(i)-c.charCodeAt(i-1));
-               }
-               return c;
-           }
-
-           //对字符串进行加密
-           function compileStr(code){
-               var c=String.fromCharCode(code.charCodeAt(0)+code.length);
-               for(var i=1;i<code.length;i++)
-               {
-                   c+=String.fromCharCode(code.charCodeAt(i)+code.charCodeAt(i-1));
-               }
-               return escape(c);
-           }
-
-           function init() {
-               layui.use('element', function(){
-                   var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
-
-                   //监听导航点击
-                   element.on('nav(item)', function(elem){
-                       //console.log(elem)
-
+                       }
                    });
-
-                   // element.init();
-               });
-
-           }
+               }
 
 
-           </script>
+               //获取url中的参数
+               function getUrlParam(name){
+                   //构造一个含有目标参数的正则表达式对象
+                   var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+                   //匹配目标参数
+                   var r = window.location.search.substr(1).match(reg);
+                   //返回参数值
+                   if (r!=null) return unescape(r[2]);
+                   return null;
+               }
+               //对字符串进行解密
+               function uncompileStr(code){
+                   code=unescape(code);
+                   var c=String.fromCharCode(code.charCodeAt(0)-code.length);
+                   for(var i=1;i<code.length;i++)
+                   {
+                       c+=String.fromCharCode(code.charCodeAt(i)-c.charCodeAt(i-1));
+                   }
+                   return c;
+               }
+           });
+        </script>
     </body>
 </html>

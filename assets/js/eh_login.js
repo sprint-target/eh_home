@@ -196,10 +196,9 @@ function loginWhere() {
     function delCookie(name) {                   //删除一个cookie
         var exp = new Date();
         exp.setTime(exp.getTime() - 1);
-        // var cval=getCookie(name);
-        var cval='';
+        var cval=getCookie(name);
+        if(cval!=null)
             document.cookie= name + "="+cval+";expires="+exp.toUTCString();
-
     }
 
     //获取cookie

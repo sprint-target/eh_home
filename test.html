@@ -5,44 +5,32 @@
     <title>Title</title>
     <link rel="stylesheet" href="assets/js/layui/css/layui.css"  media="all">
     <script type="text/javascript" src="assets/js/jquery.min.js"></script>
-    <script src="assets/js/Var.js"></script>
     <script>
-
 
        $(function () {
 
-          alert(compileStr('65') );
+
+
 
        });
-
-
+       // var focus=0;
+       // // 网页得到焦点
+       // window.onfocus = function(){
+       //     focus+=1;
+       //     if (focus == 2 ){
+       //         alert("得到焦点");
+       //     }
+       //
+       // }
+       // // 网页失去焦点
+       // window.onblur = function(){
+       //     if (focus == 2){
+       //         focus=0;
+       //     }
+       // }
        //对字符串进行加密
-       function compileStr(code){
-           var c=String.fromCharCode(code.charCodeAt(0)+code.length);
-           for(var i=1;i<code.length;i++)
-           {
-               c+=String.fromCharCode(code.charCodeAt(i)+code.charCodeAt(i-1));
-           }
-           return escape(c);
-       }
 
-       //删除一个cookie
-       function delCookie(name) {
-           var exp = new Date();
-           exp.setTime(exp.getTime() - 1);
-           // var cval=getCookie(name);
-           var cval='';
-           if(cval!=null)
-               document.cookie= name + "="+cval+";expires="+exp.toUTCString();
-       }
-       //创建cookie(名称、值、过期天数)
-       function setCookie(c_name,value,expiredays)
-       {
-           var exdate=new Date()
-           exdate.setDate(exdate.getDate()+expiredays)
-           document.cookie=c_name+ "="+value+
-               ((expiredays==null) ? "" : ";expires="+exdate.toGMTString())
-       }
+
 
     </script>
 
@@ -100,7 +88,5 @@
             layer.msg(elem.text());
         });
     });
-
-
 </script>
 </html>

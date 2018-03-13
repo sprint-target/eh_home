@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+﻿﻿<!DOCTYPE html>
 <html>
     <head>
 
@@ -645,25 +645,11 @@
                });
 
 
-               //获取cookie 判断是否是首次进入
-               var pageIsIndex=getCookie('page'),jsonData='';
-               if (pageIsIndex == null){
-                 //首次访问 设置cookie
-                   setCookie('page',pid,'-1');
-                   jsonData=true;
-               }else if(parseInt(pageIsIndex) == pid){
-                    jsonData=false;
-               }else {
-                   //非首次访问 但处于访问2个商品以上
-                   setCookie('page',pid,'-1');
-                   jsonData=true;
-               }
-
                $.ajax({
                    type: "GET",
                    url: serverURL+"/eh/getProduct",
                    async:false,//同步请求
-                   data:{"pid":pid,"page":jsonData},
+                   data:{"pid":pid},
                    dataType:"json",
                    success: function(data){
 
