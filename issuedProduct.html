@@ -5,7 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>二货 - 发布销售</title>
+   <script>
+       window.onload = function(){
+           isloginWhere();
+       }
 
+       //判断是否登录
+       function isloginWhere() {
+
+           if ( localStorage.getItem("eh_token") == null){
+               window.location.href='login.html';
+               return false;
+           }
+           $.ajax({
+               type: "GET",
+               url: serverURL+"/user/getLoginMessage",
+               data:{"token":localStorage.getItem("eh_token")},
+               dataType:"json",
+               success: function(data){
+                   if(data.errorCode=="500") {
+                       localStorage.removeItem("eh_token");
+                       window.location.href='login.html';
+                   }
+                   if(data.errorCode=="200") {
+                       return true;
+                   }
+                   if (data.errorCode == "501"){
+                       localStorage.removeItem("eh_token");
+                       window.location.href='login.html';
+                   }
+               }
+           });
+           return false;
+
+       }
+   </script>
     <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css" media="all" />
     <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css" media="all" />
     <link rel="stylesheet" type="text/css" href="assets/css/animate.min.css" media="all" />
@@ -31,6 +65,10 @@
     <link rel="stylesheet" href="assets/css/eh_home.css">
     <style>
 
+        .uploadBtn{
+
+
+        }
         .form-title{
             width: 350px;
             font-weight: normal;
@@ -227,7 +265,7 @@
                                                         <div class="info"></div>
                                                         <div class="btns">
                                                             <div id="filePicker2"></div>
-                                                            <div class="uploadBtn">开始上传</div>
+                                                            <div style="display: none" class="uploadBtn">开始上传</div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -392,9 +430,10 @@
 
     $(function () {
         load_1_Rank();
-        loginWhere();
+
 
             $("#issue").click(function () {
+                $('.uploadBtn').click();
             var productType;
             var notQuiState=$("#notQuite").is(':checked');
 
@@ -649,35 +688,7 @@
         });
     }
 
-    //判断是否登录
-    function loginWhere() {
 
-        if ( localStorage.getItem("eh_token") == null){
-            window.location.href='login.html';
-            return false;
-        }
-        $.ajax({
-            type: "GET",
-            url: serverURL+"/user/getLoginMessage",
-            data:{"token":localStorage.getItem("eh_token")},
-            dataType:"json",
-            success: function(data){
-                if(data.errorCode=="500") {
-                    localStorage.removeItem("eh_token");
-                    window.location.href='login.html';
-                }
-                if(data.errorCode=="200") {
-                   return true;
-                }
-                if (data.errorCode == "501"){
-                    localStorage.removeItem("eh_token");
-                    window.location.href='login.html';
-                }
-            }
-        });
-        return false;
-
-    }
 
     layui.use(['form', 'layedit', 'laydate'], function(){
         var form = layui.form

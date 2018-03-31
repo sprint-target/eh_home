@@ -146,40 +146,22 @@
 	</div>
 </form>
             <!-- ============================================================= 搜索结束 我的订单开始============================================================= -->
-            <ul class="navbar-mini-cart navbar-nav animate-dropdown nav pull-right flip" style="margin-left: 1em;">
+            <ul class="navbar-mini-cart navbar-nav animate-dropdown nav pull-right flip" style="margin-left: 3em;">
 	<li class="nav-item dropdown">
-		<a href="cart.html" class="nav-link" data-toggle="dropdown" title="购物车">
+		<a href="javascript:void(0);" class="nav-link cartLink" data-toggle="dropdown" title="购物车">
 			<i class="ec ec-shopping-bag"></i>
-			<span class="cart-items-count count">1</span>
-			<span class="cart-items-total-price total-price"><span class="amount">￥111215.00</span></span>
+			<span class="cart-items-count count" id="cartSize">0</span>
+			<span class="cart-items-total-price total-price"><span class="amount cartTotal" ></span></span>
 		</a>
 		<ul class="dropdown-menu dropdown-menu-mini-cart">
 			<li>
 				<div class="widget_shopping_cart_content">
 
-					<ul class="cart_list product_list_widget ">
+					<ul class="cart_list product_list_widget " id="indexCart">
 
-						<li class="mini_cart_item">
-							<a data-product_sku="" data-product_id="34" title="Remove this item" class="remove" href="#">×</a>
-							<a href="single-product.html">
-							<img class="attachment-shop_thumbnail size-shop_thumbnail wp-post-image" src="assets/images/products/mini-cart3.jpg" alt="">POV Action Cam HDR-AS100V&nbsp;
-
-							</a>
-
-							<span class="quantity">1 × <span class="amount">£269.99</span></span>
-						</li>
-
+						<P class="cartTitle">您的购物车还是空的哦~~</P>
 
 					</ul><!-- end product list -->
-
-
-					<p class="total"><strong>Subtotal:</strong> <span class="amount">￥969.98</span></p>
-
-
-					<p class="buttons">
-						<a class="button wc-forward" href="cart.html">View Cart</a>
-						<a class="button checkout wc-forward" href="checkout.html">Checkout</a>
-					</p>
 
 
 				</div>
@@ -193,11 +175,7 @@
 		<a href="wishlist.html" class="nav-link" title="我的收藏"><i class="ec ec-favorites"></i></a>
 	</li>
 </ul>
-<ul class="navbar-compare nav navbar-nav pull-right flip">
-	<li class="nav-item">
-		<a href="compare.html" class="nav-link"><i class="ec ec-compare"></i></a>
-	</li>
-</ul>
+
         </div><!-- /.row -->
 
         <div class="row">
@@ -231,11 +209,10 @@
             <main id="main" class="site-main">
                 <div class="home-v1-slider" >
 	<!-- ========================================== 网页轮播图 ========================================= -->
-
 	<div id="owl-main" class="owl-carousel owl-inner-nav owl-ui-sm">
 
 		<!-- ========================================== 第一张 ========================================= -->
-		<div class="item" style="background-image: url(assets/images/slider/banner-2.jpg);">
+		<div class="item" id="item-1" style="background-image: url(assets/images/slider/banner-2.jpg);">
 			<div class="container">
 				<div class="row">
 					<div class="col-md-offset-3 col-md-5">
@@ -259,32 +236,8 @@
 			</div>
 		</div>
 
-
-		<!-- ========================================== 第二张 ========================================= -->
-		<div class="item" style="background-image: url(assets/images/slider/iphone-6.png);">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-offset-3 col-md-5">
-						<div class="caption vertical-center text-left">
-							<div class="hero-subtitle-v2 fadeInDown-1">
-								得到你所爱
-							</div>
-
-							<div class="hero-2 fadeInDown-2">
-								2017全新智能手机
-							</div>
-
-							<div class="hero-action-btn fadeInDown-3">
-								<a href="single-product.html" class="big le-button ">现在购买</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-
-		<!-- ========================================== 第三张 ========================================= -->
-		<div class="item" style="background-image: url(assets/images/slider/iphone.png);">
+		<!-- ========================================== 第一张 ========================================= -->
+		<div class="item" id="item-2" style="background-image: url(assets/images/slider/banner-2.jpg);">
 			<div class="container">
 				<div class="row">
 					<div class="col-md-offset-3 col-md-5">
@@ -307,6 +260,31 @@
 				</div>
 			</div>
 		</div>
+
+
+		<!-- ========================================== 第二张 ========================================= -->
+		<div class="item" id="item-3" style="background-image: url(assets/images/slider/iphone-6.png);">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-offset-3 col-md-5">
+						<div class="caption vertical-center text-left">
+							<div class="hero-subtitle-v2 fadeInDown-1">
+								得到你所爱
+							</div>
+
+							<div class="hero-2 fadeInDown-2">
+								2017全新智能手机
+							</div>
+
+							<div class="hero-action-btn fadeInDown-3">
+								<a href="single-product.html" class="big le-button ">现在购买</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
 
 	</div>
 </div>
@@ -375,7 +353,7 @@
 <div class="container">
 
 
-	<ul class="nav nav-inline nav-justified" id="productTypeClass">
+	<ul class="nav nav-inline nav-justified" id="productTypeClass" style="overflow:hidden;">
 
 
 
@@ -1381,6 +1359,7 @@
         <script type="text/javascript" src="switchstylesheet/switchstylesheet.js"></script>
 		<script type="text/javascript" src="assets/js/eh_home.js"></script>
 		<script type="text/javascript" src="assets/js/Var.js"></script>
+		<script type="text/javascript" src="assets/js/eh_index.js"></script>
 		<script type="text/javascript" src="assets/js/layer/2.4/layer.js"></script>
 
            <script>

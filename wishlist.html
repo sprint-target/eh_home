@@ -5,8 +5,44 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>二货 - 我的收藏</title>
+        <title>我的收藏 - 二货</title>
+        <script>
+             bowi=false;
+            window.onload = function(){
+                isloginWhere();
+            }
 
+            //判断是否登录
+            function isloginWhere() {
+
+                if ( localStorage.getItem("eh_token") == null){
+                    window.location.href='login.html';
+                    return false;
+                }
+                $.ajax({
+                    type: "GET",
+                    url: serverURL+"/user/getLoginMessage",
+                    data:{"token":localStorage.getItem("eh_token")},
+                    dataType:"json",
+                    success: function(data){
+                        if(data.errorCode=="500") {
+                            localStorage.removeItem("eh_token");
+                            window.location.href='login.html';
+                        }
+                        if(data.errorCode=="200") {
+                            bowi=true;
+                            return true;
+                        }
+                        if (data.errorCode == "501"){
+                            localStorage.removeItem("eh_token");
+                            window.location.href='login.html';
+                        }
+                    }
+                });
+                return false;
+
+            }
+        </script>
         <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css" media="all" />
         <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css" media="all" />
         <link rel="stylesheet" type="text/css" href="assets/css/animate.min.css" media="all" />
@@ -60,7 +96,7 @@
             <div tabindex="-1" class="site-content" id="content">
     <div class="container">
 
-        <nav class="woocommerce-breadcrumb"><a href="index.html">首页</a><span class="delimiter"><i class="fa fa-angle-right"></i></span>收藏列表</nav>
+        <!--<nav class="woocommerce-breadcrumb"><a href="index.html">首页</a><span class="delimiter"><i class="fa fa-angle-right"></i></span>收藏列表</nav>-->
         <div class="content-area" id="primary">
             <main class="site-main" id="main">
                 <article class="page type-page status-publish hentry">
@@ -96,97 +132,8 @@
                                     </tr>
                                 </thead>
 
-                                <tbody>
-                                    <tr>
-                                        <td class="product-remove">
-                                            <div>
-                                                <a title="Remove this product" class="remove remove_from_wishlist" href="#">×</a>
-                                            </div>
-                                        </td>
+                                <tbody id="wiBox">
 
-                                        <td class="product-thumbnail">
-                                            <a href="single-product.html">
-                                            <img width="180" height="180" alt="1" class="wp-post-image" src="assets/images/products/2.jpg"></a>
-                                        </td>
-
-                                        <td class="product-name">
-                                            <a href="single-product.html">白色单人2无线</a>
-                                        </td>
-
-                                        <td class="product-price">
-                                            <span class="electro-price"><span class="amount">￥248.99</span></span>
-                                        </td>
-
-                                        <td class="product-stock-status">
-                                            <span class="in-stock">有货</span>
-                                        </td>
-
-                                        <td class="product-add-to-cart">
-
-                                            <a href="#" class="button"> 添加到购物车</a>
-
-                                        </td>
-                                    </tr>
-                                    <tr>
-
-                                        <td class="product-remove">
-                                            <div>
-                                                <a title="Remove this product" class="remove remove_from_wishlist" href="#">×</a>
-                                            </div>
-                                        </td>
-
-                                        <td class="product-thumbnail">
-                                            <a href="single-product.html">
-                                            <img width="180" height="180" alt="Ultrabooks" class="wp-post-image" src="assets/images/products/3.jpg"></a>
-                                        </td>
-
-                                        <td class="product-name">
-                                            <a href="single-product.html">平板电脑红色EliteBook旋转810 G2</a>
-                                        </td>
-
-                                        <td class="product-price">
-                                            <span class="electro-price"><span class="amount">￥1200.00</span></span>
-                                        </td>
-
-                                        <td class="product-stock-status">
-                                            <span class="in-stock">有货</span>
-                                        </td>
-
-                                        <td class="product-add-to-cart">
-
-                                            <a href="#" class="button">添加到购物车</a>
-                                        </td>
-                                    </tr>
-                                    <tr >
-
-                                        <td class="product-remove">
-                                            <div>
-                                                <a title="Remove this product" class="remove remove_from_wishlist" href="#">×</a>
-                                            </div>
-                                        </td>
-
-                                        <td class="product-thumbnail">
-                                            <a href="single-product.html"><img width="180" height="180" alt="GameStation" class=" wp-post-image" src="assets/images/products/1.jpg"></a>
-                                        </td>
-
-                                        <td class="product-name">
-                                            <a href="single-product.html">GameConsole命运特别版</a>
-                                        </td>
-
-                                        <td class="product-price">
-                                            <span class="electro-price"><span class="amount">￥789.00</span></span>
-                                        </td>
-
-                                        <td class="product-stock-status">
-                                            <span class="in-stock">无货</span>
-                                        </td>
-
-                                        <td class="product-add-to-cart">
-
-                                            <a href="#" class="button">添加到购物车</a>
-
-                                        </td>
-                                    </tr>
                                 </tbody>
 
                                 <tfoot>
@@ -324,7 +271,152 @@
 
 </div>
         <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+    <script src="assets/js/Var.js"></script>
     <script src="assets/js/eh_home.js"></script>
     <script src="assets/js/layer/2.4/layer.js"></script>
     </body>
+    <script>
+
+        $(function () {
+
+
+
+                //加载收藏信息
+                $.ajax({
+                    type:'GET',
+                    url:serverURL+'/favorites/get',
+                    data:{'token':localStorage.getItem('eh_token')},
+                    dataType:'json',
+                    success:function (data) {
+                    if (data.errorCode == "200"){
+                        var list=data.list,box='',grounding='已下架';
+                        $.each(list,function (index,p) {
+                            if (p.product.grounding){
+                                grounding='上架中';
+                            }
+                            box+="<tr class='wish_item'>\n" +
+                                "                                        <td class=\"product-remove\">\n" +
+                                "                                            <div>\n" +
+                                "                                                <a title=\"取消收藏\" class=\"remove remove_from_wishlist\" href=\"javascript:void(0);\">×</a>\n" +
+                                "                                            </div>\n" +
+                                "                                        </td>\n" +
+                                "                                        <td class=\"product-thumbnail\">\n" +
+                                "                                            <a href=\"single-product.html?pid="+p.product.id+"&target=wish\" target='_blank'>\n" +
+                                "                                            <img width=\"180\" height=\"180\" alt=\"1\" class=\"wp-post-image\" src=\"assets/images/productImg/"+p.product.imgUrl+"\"></a>\n" +
+                                "                                        </td>\n" +
+                                "                                        <td class=\"product-name\">\n" +
+                                "                                            <a href=\"single-product.html?pid="+p.product.id+"&target=wish\" target='_blank'>"+p.product.productName+"</a>\n" +
+                                    "<span style=\"display: block;padding-top: 10px;font-size: 14px;color: orange;\">"+p.product.degree+" 新</span>"+
+                                    "<span style=\"display: block;padding-top: 5px;font-size: 12px;color: #818a91;\">在售数量: <span class=\"seeNumber\">"+grounding+"</span></span>"+
+                                "                                        </td>\n" +
+                                "                                        <td class=\"product-price\">\n" +
+                                "                                            <span class=\"electro-price\"><span class=\"amount\">"+p.product.productPrice.formatMoney(2,'￥','','.')+"</span></span>\n" +
+                                "                                        </td>\n" +
+                                "                                        <td class=\"product-stock-status\">\n" +
+                                "                                            <span class=\"in-stock\">"+p.product.productNumber+"</span>\n" +
+                                "                                        </td>\n" +
+                                "                                        <td class=\"product-add-to-cart\">\n" +
+                                "                                            <a href=\"javascript:void(0);\" class=\"button add_to_wish_button\"> 添加到购物车</a>\n" +
+                                    "<input type='hidden' class='pid' value='"+p.product.id+"'>"+
+                                "                                        </td>\n" +
+                                "                                    </tr>\n";
+                        });
+                        $('#wiBox').append(box);
+                    }
+                        if (data.errorCode == "500"){
+                            layer.msg(data.message);
+                        }
+                        if (data.errorCode == "501"){
+                            layer.msg(data.message);
+                            localStorage.removeItem('eh_token');
+                        }
+                },
+                error:function () {
+                    layer.msg('系统出错,紧急修复中');
+                }
+                });
+
+
+             //取消收藏
+            $(document).on('click',".remove_from_wishlist",function () {
+                var e=$(this);
+               var pid=$(this).parents('.product-remove').siblings('.product-add-to-cart').find('.pid').val();
+               pid=Number(pid);
+               if (isInteger(pid)){
+                   if (localStorage.getItem("eh_token") == null || localStorage.getItem('eh_token').trim().length == 0){
+                       window.location.href='login.html';
+                       return false;
+                   }
+
+                   $.ajax({
+                       type:'POST',
+                       url:serverURL+'/favorites/del',
+                       data:{'token':localStorage.getItem('eh_token'),'pid':pid},
+                       dataType:'json',
+                       success:function (data) {
+                           if(data.errorCode == "200"){
+                               layer.msg(data.message);
+                               $(e).parents('.wish_item').remove();
+                           }
+                           if (data.errorCode == "500"){
+                               layer.msg(data.message);
+                           }
+                           if (data.errorCode == "501"){
+                               layer.msg(data.message);
+                               localStorage.removeItem('eh_token');
+                           }
+                       },
+                       error:function(){
+                           layer.msg('系统出错,紧急修复中');
+                       }
+                   });
+
+               }else {
+                   layer.msg("请不要恶意修改哦~");
+                   return false;
+               }
+            });
+
+            //点击图标加入购物车事件
+            $(document).on('click',".add_to_wish_button",function(){
+                var pid=$(this).siblings(".pid").val();
+                var cartObj=[];
+
+                $.ajax({
+                    type: "post",
+                    url: serverURL+"/shoppingCart/addShoppingCart",
+                    data:{"token":localStorage.getItem("eh_token"),"pid":pid,"pNumber":1,"ds": JSON.stringify(cartObj)},
+                    dataType:"json",
+                    success: function(data){
+                        if (data.errorCode == "501"){
+                            layer.msg(data.message);
+                            window.location.href="login.html";
+                        }
+                        if (data.errorCode == "200"){
+
+                            if (data.message == "商品库存不足"){
+                                layer.msg("您已经添加过啦~");
+                            }else {
+                                layer.msg(data.message);
+                            }
+                        }
+                        if (data.errorCode == "500"){
+                            if (data.message == "商品库存不足"){
+                                layer.msg("您已经添加过啦~");
+                            }else {
+                                layer.msg(data.message);
+                            }
+                        }
+                    },
+                    error:function () {
+                        layer.msg('系统出错,紧急修复中');
+                    }
+                });
+
+                return false;
+            });
+
+        });
+
+    </script>
 </html>

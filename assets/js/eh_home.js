@@ -3,9 +3,6 @@ var likeBox;
 $(function () {
     //加载登录信息
     getheaderMessage();
-    //加载分类信息
-    productTypeInit();
-    getBlock_one();
     //导航栏下拉
     $('#xl').mouseover(function () {
         $('.menu-item-xiala').css('display','block');
@@ -15,10 +12,109 @@ $(function () {
     });
 
 
-
-
-
 });
+
+   function getCart() {
+       $.ajax({
+           type: "GET",
+           url: serverURL + "/shoppingCart/cartList",
+           data: {"token": localStorage.getItem("eh_token")},
+           dataType: "json",
+           success: function (data) {
+               if (data.errorCode == "200"){
+                   if (data.list.length >0){
+                       $('#indexCart').text('');
+                       var box='',totalOf=0;
+                       $.each(data.list,function (index,c) {
+                           totalOf+=c.product.productPrice;
+                            box+="<li class=\"mini_cart_item \">\n" +
+                                "\t\t\t\t\t\t\t<a data-product_sku=\"\" data-product_id=\"34\" title=\"移除\" class=\"remove cartRemove\" href=\"JavaScript:void(0);\">×</a>\n" +
+                                "<input type='hidden' class='pid' value='"+c.id+"'>"+
+                                "\t\t\t\t\t\t\t<a href=\"single-product.html?pid="+c.product.id+"&target=indexCart\" target='_blank'>\n" +
+                                "\t\t\t\t\t\t\t<img class=\"attachment-shop_thumbnail size-shop_thumbnail wp-post-image\" src=\"assets/images/productImg/"+c.product.imgUrl+"\" alt=\""+c.product.productName+"\">"+c.product.productName+
+                                "\t\t\t\t\t\t\t</a>\n" +
+                                "\t\t\t\t\t\t\t<span class=\"quantity\">1 × <span class=\"amount\">"+c.product.productPrice.formatMoney(2,'￥','','.')+"</span></span>\n" +
+                                "\t\t\t\t\t\t</li>";
+                       });
+                       var tit="\t<p class=\"total\" style=\"display: block;\"><strong>小计:</strong> <span class=\"amount cartTotal\" ></span></p>\n" +
+                           "\t\t\t\t\t<p class=\"buttons\">\n" +
+                           "\t\t\t\t\t\t<a class=\"button wc-forward\" href=\"cart.html\">到我的购物车</a>\n" +
+                           "\t\t\t\t\t\t<a class=\"button checkout wc-forward subOrderBtn\" href=\"javascript:void(0);\">结算</a>\n" +
+                           "\t\t\t\t\t</p>";
+                       $('.cartTitle').remove();
+                       $('.widget_shopping_cart_content .total').remove();
+                       $('.widget_shopping_cart_content .buttons').remove();
+                       $("#indexCart").after(tit);
+                       $('#cartSize').text(data.list.length);
+                       $('#indexCart').append(box);
+                       $('.cartTotal').text(totalOf.formatMoney(2,'￥','','.'));
+                   }
+               }
+           }
+
+       });
+   }
+
+   //首页购物车结算fun
+    $(document).on('click',".subOrderBtn",function(){
+        $.ajax({
+            type: "GET",
+            url: serverURL + "/shoppingCart/cartList",
+            data: {"token": localStorage.getItem("eh_token")},
+            dataType: "json",
+            success: function (data) {
+                if (data.errorCode == "200") {
+                    var key=compileStr("success");
+                    layer.msg("结算成功,正在跳转到订单页...",{
+                        time: 1000 //2秒关闭（如果不配置，默认是3秒）
+                    },function () {
+                        window.location.href="generateOrder.html?pKey="+key;
+                    });
+
+                }
+                if (data.errorCode == "501") {
+                    layer.msg(data.message);
+                    localStorage.removeItem("eh_token");
+                }
+            },
+            error:function () {
+                layer.msg("哎呀,出错了...");
+            }
+        });
+
+        return false;
+    });
+
+//移除购物车商品
+function delCratProduct(cartId,e) {
+    $.ajax({
+        type:"POST",
+        url:serverURL+"/shoppingCart/delCartProduct",
+        data:{"token":localStorage.getItem("eh_token"),"cartId":cartId},
+        dataType:'json',
+        success:function (data) {
+            if (data.errorCode == "200"){
+                layer.msg("移除成功");
+                $(e).parents(".mini_cart_item").remove();
+                if(data.item.cartListSize > 0){
+                    $('#cartSize').text(data.item.cartListSize);
+                    $('.cartTotal').text(data.item.subtotal.formatMoney(2,'￥','','.'));
+                }else {
+                    $('#cartSize').text(0);
+                    $('.cartTotal').text('￥00.00');
+                    $('#indexCart').append("<P class=\"cartTitle\">您的购物车还是空的哦~~</P>");
+                    $('.widget_shopping_cart_content .total').remove();
+                    $('.widget_shopping_cart_content .buttons').remove();
+
+                }
+
+            }
+            if (data.errorCode == "500"){
+                layer.msg(data.message);
+            }
+        }
+    });
+}
 
 // 动态加载分类js
 $(document).on('click',".mid-link",function(){
@@ -76,7 +172,7 @@ $(document).on('click',".mid-link",function(){
     //判断是否登录
     function loginWhere() {
 
-        if (localStorage.getItem("eh_token").length == 0 || localStorage.getItem("eh_token") == null){
+        if (localStorage.getItem("eh_token") == null || localStorage.getItem("eh_token").length == 0){
             return false;
         }
         $.ajax({
@@ -105,6 +201,50 @@ $(document).on('click',".mid-link",function(){
         localStorage.removeItem("eh_token");
         window.location.href="index.html";
     }
+
+
+    //验证整型
+    function isInteger(x) {
+        return (typeof x === 'number') && (x % 1 === 0);
+    }
+    //收藏
+    $(document).on('click','.add_to_wishlist',function () {
+       var pid=$(this).parents('.hover-area').siblings('.price-add-to-cart').find('.pid').val();
+       pid=Number(pid);
+      if (isInteger(pid)){
+
+          if (localStorage.getItem("eh_token") == null || localStorage.getItem('eh_token').trim().length == 0){
+             window.location.href='login.html';
+             return false;
+          }
+
+          $.ajax({
+             type:'POST',
+             url:serverURL+'/favorites/add',
+             data:{'token':localStorage.getItem('eh_token'),'pid':pid},
+             dataType:'json',
+             success:function (data) {
+              if(data.errorCode == "200"){
+                  layer.msg(data.message);
+              }
+              if (data.errorCode == "500"){
+                  layer.msg(data.message);
+              }
+                 if (data.errorCode == "501"){
+                     layer.msg(data.message);
+                     localStorage.removeItem('eh_token');
+                 }
+          },
+          error:function(){
+              layer.msg('系统出错,紧急修复中');
+          }
+          });
+
+      }else {
+          layer.msg("请不要恶意修改哦~");
+          return false;
+      }
+    });
 
 //加载分类信息 fun
     function  productTypeInit() {
@@ -284,9 +424,9 @@ $(document).on('click',".mid-link",function(){
                             $("#productTypeClass").append("<li class=\"nav-item\"><a class=\"nav-link mid-link\" href=\"javascript:void(0);\">"+rank_1[it]+"</a></li>");
                         }
 
-                        if (it == 10){
-                            break;
-                        }
+                        // if (it == 10){
+                        //     break;
+                        // }
                     }
 
                 }
@@ -310,8 +450,14 @@ $(document).on('click',".mid-link",function(){
                     }else {
                         newText=list[0].degree+" 新";
                     }
-                    var newPrice=list[0].productPrice;
+                    var newPrice=list[0].productPrice,imgUrl="";
                     newPrice=newPrice.formatMoney(2,"￥","",".");
+                    if (list[0].imgUrl != null){
+                        imgUrl=list[0].imgUrl;
+                    }else {
+                        imgUrl='777317.jpeg';
+                    }
+
                     $("#Block_one").append(
                         "<div class=\"deals-block col-lg-4\">\n" +
                         "\t\t<section class=\"section-onsale-product\">\n" +
@@ -331,7 +477,7 @@ $(document).on('click',".mid-link",function(){
                         "\t\t\t\t<div class=\"onsale-product\">\n" +
                         "\t\t\t\t\t<a href=\"single-product.html?pid="+list[0].id+"&target=index&pageType=newSell\">\n" +
                         "\t\t\t\t\t\t<div class=\"product-thumbnail\">\n" +
-                        "\t\t\t\t\t\t\t<img class=\"wp-post-image\" data-echo=\"assets/images/onsale-product.jpg\" src=\"assets/images/blank.gif\" alt=\"\"></div>\n" +
+                        "\t\t\t\t\t\t\t<img style='border-radius: 8px;position: absolute;top: 50%;transform:translateY(-50%);' class=\"wp-post-image\" data-echo=\"assets/images/productImg/"+imgUrl+"\" src=\"assets/images/blank.gif\" title='"+list[0].productName+"'></div>\n" +
                         "\n" +
                         "\t\t\t\t\t\t\t<h3>"+list[0].productName+"</h3>\n" +
                         "\t\t\t\t\t</a>\n" +
@@ -381,11 +527,11 @@ $(document).on('click',".mid-link",function(){
                         likeBox+="<li class=\""+boxClass+"\">\n" +
                             "\t\t\t\t<div class=\"product-outer\">\n" +
                             "    <div class=\"product-inner\">\n" +
-                            "        <span class=\"loop-product-categories\"><a href=\"product-category.html\" rel=\"tag\">"+list[li].productType.productTypeName+"</a></span>\n" +
+                            "        <span class=\"loop-product-categories\"><a href=\"product-category.html\"  rel=\"tag\">"+list[li].productType.productTypeName+"</a></span>\n" +
                             "        <a href=\"single-product.html?pid="+list[li].id+"&target=index&pageType=guessLike\">\n" +
                             "            <h3>"+list[li].productName+"</h3>\n" +
                             "            <div class=\"product-thumbnail\">\n" +
-                            "                <img src=\"assets/images/blank.gif\" data-echo=\"assets/images/products/1.jpg\" class=\"img-responsive\" alt=\"\">\n" +
+                            "                <img style='border-radius: 8px;' src=\"assets/images/blank.gif\" data-echo=\"assets/images/productImg/"+list[li].imgUrl+"\" class=\"img-responsive\"title='"+list[li].productName+"'>\n" +
                             "            </div>\n" +
                             "        </a>\n" +
                             "\n" +
@@ -403,7 +549,7 @@ $(document).on('click',".mid-link",function(){
                             "        <div class=\"hover-area\">\n" +
                             "            <div class=\"action-buttons\">\n" +
                             "\n" +
-                            "                <a href=\"#\" rel=\"nofollow\" class=\"add_to_wishlist\" title=\"收藏\">收藏</a>\n" +
+                            "                <a href=\"javascript:void(0);\" rel=\"nofollow\" class=\"add_to_wishlist\" title=\"收藏\">收藏</a>\n" +
                             "            </div>\n" +
                             "        </div>\n" +
                             "    </div><!-- /.product-inner -->\n" +
@@ -424,9 +570,7 @@ $(document).on('click',".mid-link",function(){
                         "\t\t\t\t\t\t\t\t\t\t<a href=\"single-product.html?pid="+list[lea].id+"&target=index&pageType=newLeave\">\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t<h3>"+list[lea].productName+"</h3>\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t<div class=\"product-thumbnail\">\n" +
-                        "\n" +
-                        "\t\t\t\t\t\t\t\t\t\t\t\t<img data-echo=\"assets/images/products/4.jpg\" src=\"assets/images/blank.gif\" alt=\"\">\n" +
-                        "\n" +
+                        "\t\t\t\t\t\t\t\t\t\t\t\t<img style='border-radius: 8px;' data-echo=\"assets/images/productImg/"+list[lea].imgUrl+"\" src=\"assets/images/blank.gif\" title='"+list[lea].productName+"'>\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t</div>\n" +
                         "\t\t\t\t\t\t\t\t\t\t</a>\n" +
                         "\n" +
@@ -443,7 +587,7 @@ $(document).on('click',".mid-link",function(){
                         "\t\t\t\t\t\t\t\t\t\t<div class=\"hover-area\">\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t<div class=\"action-buttons\">\n" +
                         "\n" +
-                        "\t\t\t\t\t\t\t\t\t\t\t\t<a href=\"#\" rel=\"nofollow\" class=\"add_to_wishlist\">\n" +
+                        "\t\t\t\t\t\t\t\t\t\t\t\t<a href=\"javascript:void(0);\" rel=\"nofollow\" class=\"add_to_wishlist\">\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t\t\t收藏</a>\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t\t</div>\n" +
                         "\t\t\t\t\t\t\t\t\t\t\t</div>\n" +
@@ -451,6 +595,7 @@ $(document).on('click',".mid-link",function(){
                         "\t\t\t\t\t\t\t\t\t</div><!-- /.product-outer -->\n" +
                         "\t\t\t\t\t\t\t\t</li>";
                     }
+
 
                     //最热商品模块数据加载
                     for (var topi=16;topi<22;topi++) {
@@ -465,7 +610,7 @@ $(document).on('click',".mid-link",function(){
                             "\t\t\t\t\t\t<a href=\"single-product.html?pid="+list[topi].id+"&target=index&pageType=hotProduct\">\n" +
                             "\t\t\t\t\t\t\t<h3>"+list[topi].productName+"</h3>\n" +
                             "\t\t\t\t\t\t\t<div class=\"product-thumbnail\">\n" +
-                            "\t\t\t\t\t\t\t\t<img src=\"assets/images/blank.gif\" data-echo=\"assets/images/products/1.jpg\" class=\"img-responsive\" alt=\"\">\n" +
+                            "\t\t\t\t\t\t\t\t<img style='border-radius: 8px;' src=\"assets/images/blank.gif\" data-echo=\"assets/images/productImg/"+list[topi].imgUrl+"\" class=\"img-responsive\" title='"+list[topi].productName+"'>\n" +
                             "\t\t\t\t\t\t\t</div>\n" +
                             "\t\t\t\t\t\t</a>\n" +
                             "\n" +
@@ -483,13 +628,16 @@ $(document).on('click',".mid-link",function(){
                             "\t\t\t\t\t\t<div class=\"hover-area\">\n" +
                             "\t\t\t\t\t\t\t<div class=\"action-buttons\">\n" +
                             "\n" +
-                            "\t\t\t\t\t\t\t\t<a href=\"#\" rel=\"nofollow\" class=\"add_to_wishlist\" title=\"收藏\">收藏</a>\n" +
+                            "\t\t\t\t\t\t\t\t<a href=\"javascript:void(0);\" rel=\"nofollow\" class=\"add_to_wishlist\" title=\"收藏\">收藏</a>\n" +
                             "\t\t\t\t\t\t\t</div>\n" +
                             "\t\t\t\t\t\t</div>\n" +
                             "\t\t\t\t\t</div><!-- /.product-inner -->\n" +
                             "\t\t\t\t</div><!-- /.product-outer -->\n" +
                             "\t\t\t</li><!-- /.products -->";
+
                     }
+
+
 
                     $("#Block_one").append(
                         "<div class=\"tabs-block col-lg-8\">\n" +
@@ -658,4 +806,13 @@ function delCookie(name) {
     var cval='';
     if(cval!=null)
         document.cookie= name + "="+cval+";expires="+exp.toUTCString();
+}
+//对字符串进行加密
+function compileStr(code){
+    var c=String.fromCharCode(code.charCodeAt(0)+code.length);
+    for(var i=1;i<code.length;i++)
+    {
+        c+=String.fromCharCode(code.charCodeAt(i)+code.charCodeAt(i-1));
+    }
+    return escape(c);
 }
